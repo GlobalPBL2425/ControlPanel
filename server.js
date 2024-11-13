@@ -11,7 +11,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウェアをグローバルに適用する
   
-// Create a connection to MySQL to Wei Hanh's IP address /IP アドレスへの MySQL への接続を作成する
+// Create a connection to MySQL to an IP address /IP アドレスへの MySQL への接続を作成する
 const db = mysql.createConnection({
   host: '192.168.11.10',     
   user: 'root',          
