@@ -92,3 +92,7 @@ td {
 .tab-content:first-child {
   display: block;
 }
+
+.table-container th {
+  max-width: 85px;
+}
