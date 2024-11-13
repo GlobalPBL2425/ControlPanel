@@ -44,8 +44,47 @@ app.get('/getSensorData', (req, res) => {
   });
 });
 
+
+// Define a route to get sensor temperature data / センサー温度データを取得するルートを定義する
+app.get('/getSensorTemp', (req, res) => {
+  const query = 'SELECT * FROM sensorreading'; 
+  console.log(query);
+  
+  db.query(query, (err, result) => {
+    if (err) {
+        console.error('Database query failed:', err);
+      res.status(500).send({ error: 'Database query failed' });
+      return;
+    }
+
+
+    console.log('Database result:', result);
+    res.json(result);  // Send data back as JSON / データを JSON として送り返す
+  });
+});
+
+// Define a route to get sensor humidity data / センサーの湿度データを取得するルートを定義する
+app.get('/getSensorHumd', (req, res) => {
+  const query = 'SELECT * FROM sensorreading'; 
+  console.log(query);
+  
+  db.query(query, (err, result) => {
+    if (err) {
+        console.error('Database query failed:', err);
+      res.status(500).send({ error: 'Database query failed' });
+      return;
+    }
+
+
+    console.log('Database result:', result);
+    res.json(result);  // Send data back as JSON / データを JSON として送り返す
+  });
+});
+
+
 // Start the server on port 3000 / ポート 3000 でサーバーを起動します
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+

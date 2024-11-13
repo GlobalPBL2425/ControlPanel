@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GBL2425 System</title>
+    <title>GPBL2425 System</title>
     <link rel="stylesheet" href="style/index.css">
 </head>
 <body>
 
-<h1 class="main-header">GBL2425 System</h1>
+<h1 class="main-header">GPBL2425 System</h1>
 
 <div class="folder">
     <div class="tabs">
@@ -30,149 +30,168 @@
                     <th>Min Temp Value</th>
                     <th>Average Temp Value</th>
                 </tr>
-                <tr>
-                    <td>compost 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                    <td>Row 1, Cell 4</td>
-                    <td>Row 1, Cell 5</td>
-                </tr>
-                <tr>
-                    <td>compost 2</td>
-                    <td>Row 2, Cell 2</td>
-                    <td>Row 2, Cell 3</td>
-                    <td>Row 2, Cell 4</td>
-                    <td>Row 2, Cell 5</td>
-                </tr>
-                <tr>
-                    <td>compost 3</td>
-                    <td>Row 3, Cell 2</td>
-                    <td>Row 3, Cell 3</td>
-                    <td>Row 3, Cell 4</td>
-                    <td>Row 3, Cell 5</td>   
-                </tr>
-                <tr>
-                    <td>compost 4</td>
-                    <td>Row 4, Cell 2</td>
-                    <td>Row 4, Cell 3</td>
-                    <td>Row 4, Cell 4</td>
-                    <td>Row 4, Cell 5</td>
-                </tr>
-                <tr>
-                    <td>compost 5</td>
-                    <td>Row 5, Cell 2</td>
-                    <td>Row 5, Cell 3</td>
-                    <td>Row 5, Cell 4</td>
-                    <td>Row 5, Cell 5</td>
-                </tr>
-                <tr>
-                    <td>compost 6</td>
-                    <td>Row 6, Cell 2</td>
-                    <td>Row 6, Cell 3</td>
-                    <td>Row 6, Cell 4</td>
-                    <td>Row 6, Cell 5</td>
-                </tr>
             </table>
             <table>
                 <tr>
-                    
                     <th>Current Humidity</th>
                     <th>Max Humidity</th>
                     <th>Min Humidity</th>
                     <th>Average Humidity</th>
                 </tr>
-                <tr>
-                    
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                    <td>Row 1, Cell 4</td>
-                    <td>Row 1, Cell 5</td>
-                </tr>
-                <tr>
-                    
-                    <td>Row 2, Cell 2</td>
-                    <td>Row 2, Cell 3</td>
-                    <td>Row 2, Cell 4</td>
-                    <td>Row 2, Cell 5</td>
-                </tr>
-                <tr>
-                    
-                    <td>Row 3, Cell 2</td>
-                    <td>Row 3, Cell 3</td>
-                    <td>Row 3, Cell 4</td>
-                    <td>Row 3, Cell 5</td>
-                </tr>
-                <tr>
-                    
-                    <td>Row 4, Cell 2</td>
-                    <td>Row 4, Cell 3</td>
-                    <td>Row 4, Cell 4</td>
-                    <td>Row 4, Cell 5</td>
-                </tr>
-                <tr>
-                    
-                    <td>Row 5, Cell 2</td>
-                    <td>Row 5, Cell 3</td>
-                    <td>Row 5, Cell 4</td>
-                    <td>Row 5, Cell 5</td>
-                </tr>
-                <tr>
-                    <td>Row 6, Cell 2</td>
-                    <td>Row 6, Cell 3</td>
-                    <td>Row 6, Cell 4</td>
-                    <td>Row 6, Cell 5</td>
-                </tr>
             </table>
         </div>
     </div>
-    <div class="tab-content" id="Tab2" style="display:none">
-        <p>Weather Condition</p>
-        <!-- Data will be taken from MySQL/データは MySQL から取得されます-->
-         <table>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Min Temp</th>
-                <th>Max Temp</th>
-                <th>Min Hum</th>
-                <th>Max Hum</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Cold</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Cold</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Cold</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Cold</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-         </table>
-
-
+    <div class="tab-content" id="Tab1">
+        <p>Measuring Temperature and Humidity</p>
+        
+        <div class="table-container">
+            <!-- Data will be taken from MySQL (Node.js)/データは MySQL から取得されます-->
+            <table id="tempTable">
+                <tr>
+                    <th>Compost</th>
+                    <th>Current Temperature</th>
+                    <th>Max Temp Value</th>
+                    <th>Min Temp Value</th>
+                    <th>Average Temp Value</th>
+                </tr>
+            </table>
+            <table id="humdTable">
+                <tr>
+                    <th>Current Humidity</th>
+                    <th>Max Humidity</th>
+                    <th>Min Humidity</th>
+                    <th>Average Humidity</th>
+                </tr>
+            </table>
+        </div>
+        <script>
+            // Function to fetch and display temperature data
+            function fetchTemperatureData() {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:3000/getSensorTemp", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        const sensorData = JSON.parse(xhr.responseText);
+                        const tempTable = document.getElementById("tempTable");
+        
+                        // Clear existing rows
+                        tempTable.innerHTML = `
+                            <tr>
+                                <th>Compost</th>
+                                <th>Current Temperature</th>
+                                <th>Max Temp Value</th>
+                                <th>Min Temp Value</th>
+                                <th>Average Temp Value</th>
+                            </tr>
+                        `;
+        
+                        // Insert new rows/新しい行を挿入
+                        sensorData.forEach(function(row) {
+                            const tr = document.createElement("tr");
+                            tr.innerHTML = `
+                                <td>${row.robotId}</td>
+                                <td>${row.latest}</td>
+                                <td>${row.maxTemp}</td>
+                                <td>${row.minTemp}</td>
+                                <td>${row.averageTemperature}</td>
+                            `;
+                            tempTable.appendChild(tr);
+                        });
+                    }
+                };
+                xhr.send();
+            }
+        
+            // Function to fetch and display humidity data
+            function fetchHumidityData() {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:3000/getSensorHumd", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        const sensorData = JSON.parse(xhr.responseText);
+                        const humdTable = document.getElementById("humdTable");
+        
+                        // Clear existing rows
+                        humdTable.innerHTML = `
+                            <tr>
+                                <th>Current Humidity</th>
+                                <th>Max Humidity</th>
+                                <th>Min Humidity</th>
+                                <th>Average Humidity</th>
+                            </tr>
+                        `;
+        
+                        // Insert new rows/新しい行を挿入
+                        sensorData.forEach(function(row) {
+                            const tr = document.createElement("tr");
+                            tr.innerHTML = `
+                                <td>${row.latest}</td>
+                                <td>${row.maxHumidity}</td>
+                                <td>${row.minHumidity}</td>
+                                <td>${row.averageHumidity}</td>
+                            `;
+                            humdTable.appendChild(tr);
+                        });
+                    }
+                };
+                xhr.send();
+            }
+        
+            // Call both functions to load data on page load
+            fetchTemperatureData();
+            fetchHumidityData();
+        </script>
     </div>
+
+<div class="tab-content" id="Tab2" style="display:none">
+    <p>Weather Condition</p>
+    <!-- Data will be taken from MySQL/データは MySQL から取得されます-->
+        <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Min Temp</th>
+            <th>Max Temp</th>
+            <th>Min Hum</th>
+            <th>Max Hum</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Cold</td>
+            <td>8.9</td>
+            <td>13.7</td>
+            <td> 76.7</td>
+            <td>86.3</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Cold</td>
+            <td>8.9</td>
+            <td>13.7</td>
+            <td> 76.7</td>
+            <td>86.3</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Cold</td>
+            <td>8.9</td>
+            <td>13.7</td>
+            <td> 76.7</td>
+            <td>86.3</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Cold</td>
+            <td>8.9</td>
+            <td>13.7</td>
+            <td> 76.7</td>
+            <td>86.3</td>
+        </tr>
+        </table>
+
+
+</div>
+
     <div class="tab-content" id="Tab3" style="display:none">
         <p>Sensor Readings</p>
         <!-- Data will be taken from MySQL/データは MySQL から取得されます-->
@@ -186,49 +205,49 @@
                 <th>Motor Duty Cycle</th>
             </tr>
         </table>
+
+        <script>
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:3000/getSensorData", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    const sensorData = JSON.parse(xhr.responseText);
+                    const table = document.getElementById("sensorTable");
+    
+                    
+                    table.innerHTML = `
+                        <tr>
+                            <th>Robot ID</th>
+                            <th>Timestamp</th>
+                            <th>Temperature</th>
+                            <th>Humidity</th>
+                            <th>Control Mode</th>
+                            <th>Motor Duty Cycle</th>
+                        </tr>
+                    `;
+    
+                    // Insert new rows/新しい行を挿入
+                    sensorData.forEach(function(row) {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${row.robotId}</td>
+                            <td>${row.timestamp}</td>
+                            <td>${row.temperature}</td>
+                            <td>${row.humidity}</td>
+                            <td>${row.controlMode}</td>
+                            <td>${row.motorDutyCycle}</td>
+                        `;
+                        table.appendChild(tr);
+                    });
+                }
+            };
+            xhr.send();
+    
+        </script>
+        
     </div>
     
-    <script>
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://localhost:3000/getSensorData", true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                const sensorData = JSON.parse(xhr.responseText);
-                const table = document.getElementById("sensorTable");
-
-                
-                table.innerHTML = `
-                    <tr>
-                        <th>Robot ID</th>
-                        <th>Timestamp</th>
-                        <th>Temperature</th>
-                        <th>Humidity</th>
-                        <th>Control Mode</th>
-                        <th>Motor Duty Cycle</th>
-                    </tr>
-                `;
-
-                // Insert new rows/新しい行を挿入
-                sensorData.forEach(function(row) {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${row.robotId}</td>
-                        <td>${row.timestamp}</td>
-                        <td>${row.temperature}</td>
-                        <td>${row.humidity}</td>
-                        <td>${row.controlMode}</td>
-                        <td>${row.motorDutyCycle}</td>
-                    `;
-                    table.appendChild(tr);
-                });
-            }
-        };
-        xhr.send();
-
-    </script>
-    
-
-
+   
     <div class="tab-content" id="Tab4" style="display:none">
         <p>Conditions</p>
         <div class="tabs">
@@ -503,48 +522,55 @@
 
 <script>
     function openTab(event, tabId) {
+        // Get all tabs and tab content
+        const tabs = document.getElementsByClassName("tab");
+        const tabContent = document.getElementsByClassName("tab-content");
 
-    const tabContents = document.querySelectorAll('.tabcontent');
-    tabContents.forEach(content => content.style.display = 'none');
+        // Remove active class from all tabs
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("active");
+        }
 
-    
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
+        // Hide all tab content
+        for (let i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
+        }
 
-    
-    document.getElementById(tabId).style.display = 'block';
-    event.currentTarget.classList.add('active');
-    }
+        // Add active class to the clicked tab
+        event.currentTarget.classList.add("active");
+
+        // Show the corresponding tab content
+        document.getElementById(tabId).style.display = "block";
+        }
 
     // This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
     function checkInputs(robotId) {
-        const minTemp = document.getElementById(`minTemp${robotId}`).value;
-        const maxTemp = document.getElementById(`maxTemp${robotId}`).value;
-        const minHumidity = document.getElementById(`minHumidity${robotId}`).value;
-        const maxHumidity = document.getElementById(`maxHumidity${robotId}`).value;
+        const minTemp = document.getElementById(minTemp$,{robotId}).value;
+        const maxTemp = document.getElementById(maxTemp$,{robotId}).value;
+        const minHumidity = document.getElementById(minHumidity$,{robotId}).value;
+        const maxHumidity = document.getElementById(maxHumidity$,{robotId}).value;
 
         if (!minTemp || !maxTemp || !minHumidity || !maxHumidity) {
             alert("Please fill in all temperature and humidity fields before setting.");
         } else {
             alert("Set button clicked with values: Min Temp = " + minTemp + "°C, Max Temp = " + maxTemp + "°C, Min Humidity = " + minHumidity + "%, Max Humidity = " + maxHumidity + "%");
         }
+
+        // Call the time check function within this function
+        checkTimeInputs(robotId);
     }
 
     // This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
-    function checkInputs(robotId) {
     function checkTimeInputs(robotId) {
-        const interval = document.getElementById(`interval1`).value;
-        const duration = document.getElementById(`duration1`).value;
+        const interval = document.getElementById(interval1).value;
+        const duration = document.getElementById(duration1).value;
 
         if (!interval || !duration) {
             alert("Please fill in both interval and duration before setting the time.");
         } else {
             alert("Set Time button clicked with values: Interval = " + interval + " min(s), Duration = " + duration + " min(s)");
         }
-        }
     }
-
 </script>
-
 </body>
 </html>
