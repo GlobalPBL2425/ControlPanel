@@ -6,17 +6,17 @@ const app = express();
 
 // Enable CORS for specific IP address (127.0.0.1) / 特定の IP アドレス (127.0.0.1) に対して CORS を有効にする
 const corsOptions = {
-    origin: ['http://192.168.11.4', 'http://127.0.0.1'],  // Allow requests from this address / このアドレスからのリクエストを許可する
+    origin: ['http://192.168.11.10', 'http://127.0.0.1'],  // Allow requests from this address / このアドレスからのリクエストを許可する
   methods: 'GET',
 };
 app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウェアをグローバルに適用する
   
 // Create a connection to MySQL to Wei Hanh's IP address /IP アドレスへの MySQL への接続を作成する
 const db = mysql.createConnection({
-  host: '192.168.11.4',     
+  host: '192.168.11.10',     
   user: 'root',          
   password: 'GPBL2425',   
-  database: 'testdb',
+  database: 'gpbl2425',
   port: 3306
 });
 
