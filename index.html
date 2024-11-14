@@ -211,14 +211,15 @@
         </table>
 
         <script>
+            function fetchSensorData() {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", "http://localhost:3000/getSensorData", true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.readyState === 4 && xhr.status === 200) {
                     const sensorData = JSON.parse(xhr.responseText);
                     const table = document.getElementById("sensorTable");
-    
-                    
+
+                    // Clear the table except the header row/ヘッダー行以外のテーブルをクリア
                     table.innerHTML = `
                         <tr>
                             <th>Robot ID</th>
@@ -229,7 +230,7 @@
                             <th>Motor Duty Cycle</th>
                         </tr>
                     `;
-    
+
                     // Insert new rows/新しい行を挿入
                     sensorData.forEach(function(row) {
                         const tr = document.createElement("tr");
@@ -246,7 +247,13 @@
                 }
             };
             xhr.send();
-    
+        }
+
+        // Fetch data every 5 seconds (5000 milliseconds)/データを5秒ごとに取得
+        setInterval(fetchSensorData, 5000);
+
+        // Initial fetch/最初のデータ取得
+        fetchSensorData();
         </script>
         
     </div>
