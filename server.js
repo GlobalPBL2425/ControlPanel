@@ -28,7 +28,7 @@ client.on('error', (err) => {
   console.error('MQTT connection error:', err);
 });
 
-app.get('sendMode',(req,res) =>{
+app.get('/sendMode',(req,res) =>{
   const { robotID, mode } = req.query;
   const topic = `GPBL2425/SensorArray_1/${robotID}/controlType`;
 
