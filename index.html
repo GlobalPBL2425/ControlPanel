@@ -22,15 +22,22 @@
         
         <div class="table-container">
             <!-- Data will be taken from MySQL (Node.js)/データは MySQL から取得されます-->
-             <table>
-                <th>Compost</th>
-             </table>
+            <table>
+                <tr><th>Compost</th></tr>
+                <tbody id="compostTable"></tbody>
+            </table>
             <table>
                 <tr>
                     <th>Current Temperature</th>
                     <th>Max Temp Value</th>
                     <th>Min Temp Value</th>
                     <th>Average Temp Value</th>
+                </tr>
+                <tr>
+                    <td id="currentTemp">--</td>
+                    <td id="maxTemp">--</td>
+                    <td id="minTemp">--</td>
+                    <td id="avgTemp">--</td>
                 </tr>
             </table>
             <table>
@@ -40,110 +47,105 @@
                     <th>Min Humidity</th>
                     <th>Average Humidity</th>
                 </tr>
+                <tr>
+                    <td id="currentHumd">--</td>
+                    <td id="maxHumd">--</td>
+                    <td id="minHumd">--</td>
+                    <td id="avgHumd">--</td>
+                </tr>
             </table>
         </div>
     </div>
-    <div class="tab-content" id="Tab1">
-        <p>Measuring Temperature and Humidity</p>
-        
-        <div class="table-container">
-            <!-- Data will be taken from MySQL (Node.js)/データは MySQL から取得されます-->
-            <table id="tempTable">
-                <tr>
-                    <th>Compost</th>
-                    <th>Current Temperature</th>
-                    <th>Max Temp Value</th>
-                    <th>Min Temp Value</th>
-                    <th>Average Temp Value</th>
-                </tr>
-            </table>
-            <table id="humdTable">
-                <tr>
-                    <th>Current Humidity</th>
-                    <th>Max Humidity</th>
-                    <th>Min Humidity</th>
-                    <th>Average Humidity</th>
-                </tr>
-            </table>
-        </div>
-        <script>
-            // Function to fetch and display temperature data
-            function fetchTemperatureData() {
+
+    <script>
+
+        function loadRobotIds() {
                 const xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://localhost:3000/getSensorTemp", true);
+                xhr.open("GET", "http://localhost:3000/getRobotId", true);
                 xhr.onreadystatechange = function() {
                     if (xhr.readyState === 4 && xhr.status === 200) {
-                        const sensorData = JSON.parse(xhr.responseText);
-                        const tempTable = document.getElementById("tempTable");
-        
-                        // Clear existing rows
-                        tempTable.innerHTML = `
-                            <tr>
-                                <th>Compost</th>
-                                <th>Current Temperature</th>
-                                <th>Max Temp Value</th>
-                                <th>Min Temp Value</th>
-                                <th>Average Temp Value</th>
-                            </tr>
-                        `;
-        
-                        // Insert new rows/新しい行を挿入
-                        sensorData.forEach(function(row) {
-                            const tr = document.createElement("tr");
-                            tr.innerHTML = `
-                                <td>${row.robotId}</td>
-                                <td>${row.latest}</td>
-                                <td>${row.maxTemp}</td>
-                                <td>${row.minTemp}</td>
-                                <td>${row.averageTemperature}</td>
-                            `;
-                            tempTable.appendChild(tr);
+                        const robotIds = JSON.parse(xhr.responseText);
+                        const compostTable = document.getElementById("compostTable");
+                        
+                        compostTable.innerHTML = ""; // Clear existing rows
+
+                        // Populate rows with each Robot ID
+                        robotIds.forEach(function(robotId) {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `<td>${robotId}</td>`;
+                            compostTable.appendChild(row);
                         });
                     }
                 };
                 xhr.send();
             }
-        
-            // Function to fetch and display humidity data
-            function fetchHumidityData() {
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://localhost:3000/getSensorHumd", true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        const sensorData = JSON.parse(xhr.responseText);
-                        const humdTable = document.getElementById("humdTable");
-        
-                        // Clear existing rows
-                        humdTable.innerHTML = `
-                            <tr>
-                                <th>Current Humidity</th>
-                                <th>Max Humidity</th>
-                                <th>Min Humidity</th>
-                                <th>Average Humidity</th>
-                            </tr>
-                        `;
-        
-                        // Insert new rows/新しい行を挿入
-                        sensorData.forEach(function(row) {
-                            const tr = document.createElement("tr");
-                            tr.innerHTML = `
-                                <td>${row.latest}</td>
-                                <td>${row.maxHumidity}</td>
-                                <td>${row.minHumidity}</td>
-                                <td>${row.averageHumidity}</td>
-                            `;
-                            humdTable.appendChild(tr);
-                        });
-                    }
-                };
-                xhr.send();
-            }
-        
-            // Call both functions to load data on page load
-            fetchTemperatureData();
-            fetchHumidityData();
-        </script>
-    </div>
+
+        // Function to fetch the latest temperature data
+        function fetchLatestData() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:3000/getLatest?robotID=Rpi__1&type=temperature", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    console.log("Latest Temperature Data:", data);
+                     console.log(data)
+                    document.getElementById('currentTemp').textContent = data[0]?.temperature || '--';
+                }
+            };
+            xhr.send();
+        }
+    
+        // Function to fetch min, max, and average data for temperature and humidity
+        function fetchFunctionData(type, func, elementId) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", `http://localhost:3000/getFunc?robotID=Rpi__1&type=${type}&func=${func}`, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    console.log(`Data for ${func}(${type}): `, data);
+                    // Ensure the data object has the expected key format, or adjust as needed
+                    const jsonquery = `${func}(${type})`
+                    document.getElementById(elementId).textContent = data[0]?.[jsonquery] || '--';
+
+                }
+            };
+            xhr.send();
+        }
+    
+        // Fetch temperature data
+        function loadTemperatureData() {
+            fetchLatestData();
+            fetchFunctionData('temperature', 'MAX', 'maxTemp');
+            fetchFunctionData('temperature', 'MIN', 'minTemp');
+            fetchFunctionData('temperature', 'AVG', 'avgTemp');
+        }
+    
+        // Fetch humidity data
+        function loadHumidityData() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:3000/getLatest?robotID=Rpi__1&type=humidity", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    console.log("Latest Humidity Data:", data);
+                    document.getElementById('currentHumd').textContent = data[0]?.humidity || '--';
+                }
+            };
+            xhr.send();
+    
+            fetchFunctionData('humidity', 'MAX', 'maxHumd');
+            fetchFunctionData('humidity', 'MIN', 'minHumd');
+            fetchFunctionData('humidity', 'AVG', 'avgHumd');
+        }
+    
+        // Load data when the page is loaded
+        window.onload = function() {
+            loadTemperatureData();
+            loadHumidityData();
+        };
+    </script>
+    
+</div>
 
 <div class="tab-content" id="Tab2" style="display:none">
     <p>Weather Condition</p>
@@ -167,7 +169,7 @@
         </tr>
         <tr>
             <td>2</td>
-            <td>Cold</td>
+            <td>Hot</td>
             <td>8.9</td>
             <td>13.7</td>
             <td> 76.7</td>
@@ -175,7 +177,7 @@
         </tr>
         <tr>
             <td>3</td>
-            <td>Cold</td>
+            <td>Warm</td>
             <td>8.9</td>
             <td>13.7</td>
             <td> 76.7</td>
@@ -183,7 +185,7 @@
         </tr>
         <tr>
             <td>4</td>
-            <td>Cold</td>
+            <td>Dry</td>
             <td>8.9</td>
             <td>13.7</td>
             <td> 76.7</td>

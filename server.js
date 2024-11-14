@@ -136,37 +136,44 @@ app.get('/getLatest', (req, res) => {
 // Define the route to get average of data / 
 // ie getFunc?robotID=Rpi__1&type=temperature&func=MAX
 app.get('/getFunc', (req, res) => {
-  const { robotID, type , func} = req.query;
-  const allowedFunctions = ['AVG', 'MIN', 'MAX']
+  const { robotID, type, func } = req.query;
 
-  if (robotID && type && func) {
-    if (!allowedFunctions.includes(func.toUpperCase())) {
-      return res.status(400).send({ error: 'Invalid function' });
-    }
-    // Use parameterized query to avoid SQL injection
-    const query = `
-      SELECT ${func}(${mysql.escapeId(type)}) 
-      FROM sensorreading 
-      WHERE robotId = ? 
-    `;
-    
-    console.log(query);
+  // Define valid columns and functions
+  const allowedFunctions = ['AVG', 'MIN', 'MAX'];
+  const allowedTypes = ['temperature', 'humidity'];  // Add more valid types (columns) here
 
-    // Execute the query with parameters
-    db.query(query, [robotID], (err, result) => {
-      if (err) {
-        console.error('Database query failed:', err);
-        res.status(500).send({ error: 'Database query failed' });
-        return;
-      }
-      console.log('Database result:', result);
-      res.json(result);
-    });
-  } else {
-    res.status(400).send({ error: 'Missing RobotID or type' });
+  // Validate the input parameters
+  if (!robotID || !type || !func) {
+    return res.status(400).send({ error: 'Missing RobotID, type, or func' });
   }
-});
 
+  if (!allowedFunctions.includes(func.toUpperCase())) {
+    return res.status(400).send({ error: 'Invalid function' });
+  }
+
+  if (!allowedTypes.includes(type)) {
+    return res.status(400).send({ error: 'Invalid type' });
+  }
+
+  // Use parameterized query to avoid SQL injection
+  const query = `
+    SELECT ${func.toUpperCase()}(${type}) 
+    FROM sensorreading 
+    WHERE robotId = ?
+  `;
+
+  console.log(query);  // Debugging log
+
+  // Execute the query with parameters
+  db.query(query, [robotID], (err, result) => {
+    if (err) {
+      console.error('Database query failed:', err);
+      return res.status(500).send({ error: 'Database query failed' });
+    }
+    console.log('Database result:', result);
+    res.json(result);
+  });
+});
 
 
 // Start the server on port 3000 / ポート 3000 でサーバーを起動します
