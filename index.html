@@ -33,12 +33,7 @@
                     <th>Min Temp Value</th>
                     <th>Average Temp Value</th>
                 </tr>
-                <tr>
-                    <td id="currentTemp">--</td>
-                    <td id="maxTemp">--</td>
-                    <td id="minTemp">--</td>
-                    <td id="avgTemp">--</td>
-                </tr>
+                <tbody id="temperatureTable"></tbody>
             </table>
             <table>
                 <tr>
@@ -47,105 +42,120 @@
                     <th>Min Humidity</th>
                     <th>Average Humidity</th>
                 </tr>
-                <tr>
-                    <td id="currentHumd">--</td>
-                    <td id="maxHumd">--</td>
-                    <td id="minHumd">--</td>
-                    <td id="avgHumd">--</td>
-                </tr>
+                <tbody id="humidityTable"></tbody>
             </table>
         </div>
     </div>
 
     <script>
-
+        // Function to load and display robot IDs (Rpi__1, Rpi__2, etc.)
         function loadRobotIds() {
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://localhost:3000/getRobotId", true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        const robotIds = JSON.parse(xhr.responseText);
-                        const compostTable = document.getElementById("compostTable");
-                        
-                        compostTable.innerHTML = ""; // Clear existing rows
-
-                        // Populate rows with each Robot ID
-                        robotIds.forEach(function(item) {
-                            const row = document.createElement("tr");
-                            row.innerHTML = `<td>${item.robotId}</td>`;
-                            compostTable.appendChild(row);
-                        });
-                    }
-                };
-                xhr.send();
-            }
-
-        // Function to fetch the latest temperature data
-        function fetchLatestData() {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://localhost:3000/getLatest?robotID=Rpi__1&type=temperature", true);
+            xhr.open("GET", "http://localhost:3000/getRobotId", true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    const data = JSON.parse(xhr.responseText);
-                    console.log("Latest Temperature Data:", data);
-                     console.log(data)
-                    document.getElementById('currentTemp').textContent = data[0]?.temperature || '--';
+                    const robotIds = JSON.parse(xhr.responseText);
+                    const compostTable = document.getElementById("compostTable");
+                    
+                    compostTable.innerHTML = ""; // Clear existing rows
+
+                    robotIds.sort(function(a, b) {
+                        if (a.robotId === "Rpi__1") return -1;
+                        if (b.robotId === "Rpi__1") return 1;
+                        return 0;
+                    });
+    
+                    // Populate table with robot IDs (just one row per robot)
+                    robotIds.forEach(function(item) {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `<td>${item.robotId}</td>`;
+                        compostTable.appendChild(row);
+    
+                        // Add rows to temperature and humidity tables for each robot ID
+                        const tempRow = document.createElement("tr");
+                        tempRow.innerHTML = `<td id="currentTemp-${item.robotId}">--</td><td id="maxTemp-${item.robotId}">--</td><td id="minTemp-${item.robotId}">--</td><td id="avgTemp-${item.robotId}">--</td>`;
+                        document.getElementById("temperatureTable").appendChild(tempRow);
+    
+                        const humRow = document.createElement("tr");
+                        humRow.innerHTML = `<td id="currentHumd-${item.robotId}">--</td><td id="maxHumd-${item.robotId}">--</td><td id="minHumd-${item.robotId}">--</td><td id="avgHumd-${item.robotId}">--</td>`;
+                        document.getElementById("humidityTable").appendChild(humRow);
+    
+                        // Fetch initial data for each robot
+                        loadTemperatureData(item.robotId);
+                        loadHumidityData(item.robotId);
+                    });
                 }
             };
             xhr.send();
         }
     
-        // Function to fetch min, max, and average data for temperature and humidity
-        function fetchFunctionData(type, func, elementId) {
+        // Function to fetch the latest temperature data for a given robot
+        function fetchLatestData(robotId) {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", `http://localhost:3000/getFunc?robotID=Rpi__1&type=${type}&func=${func}`, true);
+            xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=temperature`, true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     const data = JSON.parse(xhr.responseText);
-                    console.log(`Data for ${func}(${type}): `, data);
-                    // Ensure the data object has the expected key format, or adjust as needed
-                    const jsonquery = `${func}(${type})`
-                    document.getElementById(elementId).textContent = data[0]?.[jsonquery] || '--';
-
+                    document.getElementById(`currentTemp-${robotId}`).textContent = data[0]?.temperature || '--';
                 }
             };
             xhr.send();
         }
     
-        // Fetch temperature data
-        function loadTemperatureData() {
-            fetchLatestData();
-            fetchFunctionData('temperature', 'MAX', 'maxTemp');
-            fetchFunctionData('temperature', 'MIN', 'minTemp');
-            fetchFunctionData('temperature', 'AVG', 'avgTemp');
-        }
-    
-        // Fetch humidity data
-        function loadHumidityData() {
+        // Function to fetch min, max, and average data for temperature and humidity for a given robot
+        function fetchFunctionData(type, func, elementId, robotId) {
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://localhost:3000/getLatest?robotID=Rpi__1&type=humidity", true);
+            xhr.open("GET", `http://localhost:3000/getFunc?robotID=${robotId}&type=${type}&func=${func}`, true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     const data = JSON.parse(xhr.responseText);
-                    console.log("Latest Humidity Data:", data);
-                    document.getElementById('currentHumd').textContent = data[0]?.humidity || '--';
+                    const jsonquery = `${func}(${type})`;
+                    document.getElementById(`${elementId}-${robotId}`).textContent = data[0]?.[jsonquery] || '--';
+                }
+            };
+            xhr.send();
+        }
+    
+        // Fetch temperature data for a given robot
+        function loadTemperatureData(robotId) {
+            fetchLatestData(robotId);
+            fetchFunctionData('temperature', 'MAX', 'maxTemp', robotId);
+            fetchFunctionData('temperature', 'MIN', 'minTemp', robotId);
+            fetchFunctionData('temperature', 'AVG', 'avgTemp', robotId);
+        }
+    
+        // Fetch humidity data for a given robot
+        function loadHumidityData(robotId) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=humidity`, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    document.getElementById(`currentHumd-${robotId}`).textContent = data[0]?.humidity || '--';
                 }
             };
             xhr.send();
     
-            fetchFunctionData('humidity', 'MAX', 'maxHumd');
-            fetchFunctionData('humidity', 'MIN', 'minHumd');
-            fetchFunctionData('humidity', 'AVG', 'avgHumd');
+            fetchFunctionData('humidity', 'MAX', 'maxHumd', robotId);
+            fetchFunctionData('humidity', 'MIN', 'minHumd', robotId);
+            fetchFunctionData('humidity', 'AVG', 'avgHumd', robotId);
         }
     
-        // Load data when the page is loaded
+        // Periodically update data for each robot
+        function autoUpdateData() {
+            const robotIds = ['Rpi__1', 'Rpi__2']; // Add robot IDs to auto-update
+            robotIds.forEach(function(robotId) {
+                loadTemperatureData(robotId);
+                loadHumidityData(robotId);
+            });
+        }
+    
+        // Load data when the page is loaded and set up periodic updates
         window.onload = function() {
             loadRobotIds();
-            loadTemperatureData();
-            loadHumidityData();
+            setInterval(autoUpdateData, 3000); // Update data every 5 seconds
         };
     </script>
-    
 </div>
 
 <div class="tab-content" id="Tab2" style="display:none">
