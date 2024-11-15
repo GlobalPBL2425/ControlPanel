@@ -70,9 +70,9 @@
                         compostTable.innerHTML = ""; // Clear existing rows
 
                         // Populate rows with each Robot ID
-                        robotIds.forEach(function(robotId) {
+                        robotIds.forEach(function(item) {
                             const row = document.createElement("tr");
-                            row.innerHTML = `<td>${robotId}</td>`;
+                            row.innerHTML = `<td>${item.robotId}</td>`;
                             compostTable.appendChild(row);
                         });
                     }
@@ -140,6 +140,7 @@
     
         // Load data when the page is loaded
         window.onload = function() {
+            loadRobotIds();
             loadTemperatureData();
             loadHumidityData();
         };
