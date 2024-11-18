@@ -48,7 +48,7 @@
     </div>
 
     <script>
-        // Function to load and display robot IDs (Rpi__1, Rpi__2, etc.)
+        // Function to load and display robot IDs (Rpi__1, Rpi__2, etc.) / ロボットID（Rpi__1、Rpi__2など）を読み込んで表示する機能
         function loadRobotIds() {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", "http://localhost:3000/getRobotId", true);
@@ -57,7 +57,7 @@
                     const robotIds = JSON.parse(xhr.responseText);
                     const compostTable = document.getElementById("compostTable");
                     
-                    compostTable.innerHTML = ""; // Clear existing rows
+                    compostTable.innerHTML = ""; // Clear existing rows / 既存の行をクリアする
 
                     robotIds.sort(function(a, b) {
                         if (a.robotId === "Rpi__1") return -1;
@@ -65,13 +65,13 @@
                         return 0;
                     });
     
-                    // Populate table with robot IDs (just one row per robot)
+                    // Populate table with robot IDs (just one row per robot)/テーブルにロボット ID を入力します (ロボットごとに 1 行のみ)
                     robotIds.forEach(function(item) {
                         const row = document.createElement("tr");
                         row.innerHTML = `<td>${item.robotId}</td>`;
                         compostTable.appendChild(row);
     
-                        // Add rows to temperature and humidity tables for each robot ID
+                        // Add rows to temperature and humidity tables for each robot ID/ロボット ID ごとに温度と湿度のテーブルに行を追加します
                         const tempRow = document.createElement("tr");
                         tempRow.innerHTML = `<td id="currentTemp-${item.robotId}">--</td><td id="maxTemp-${item.robotId}">--</td><td id="minTemp-${item.robotId}">--</td><td id="avgTemp-${item.robotId}">--</td>`;
                         document.getElementById("temperatureTable").appendChild(tempRow);
@@ -80,7 +80,7 @@
                         humRow.innerHTML = `<td id="currentHumd-${item.robotId}">--</td><td id="maxHumd-${item.robotId}">--</td><td id="minHumd-${item.robotId}">--</td><td id="avgHumd-${item.robotId}">--</td>`;
                         document.getElementById("humidityTable").appendChild(humRow);
     
-                        // Fetch initial data for each robot
+                        // Fetch initial data for each robot/各ロボットの初期データを取得する
                         loadTemperatureData(item.robotId);
                         loadHumidityData(item.robotId);
                     });
@@ -89,7 +89,7 @@
             xhr.send();
         }
     
-        // Function to fetch the latest temperature data for a given robot
+        // Function to fetch the latest temperature data for a given robot/特定のロボットの最新の温度データを取得する機能
         function fetchLatestData(robotId) {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=temperature`, true);
@@ -102,7 +102,7 @@
             xhr.send();
         }
     
-        // Function to fetch min, max, and average data for temperature and humidity for a given robot
+        // Function to fetch min, max, and average data for temperature and humidity for a given robot / 特定のロボットの温度と湿度の最小、最大、平均データを取得する関数
         function fetchFunctionData(type, func, elementId, robotId) {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", `http://localhost:3000/getFunc?robotID=${robotId}&type=${type}&func=${func}`, true);
@@ -116,7 +116,7 @@
             xhr.send();
         }
     
-        // Fetch temperature data for a given robot
+        // Fetch temperature data for a given robot / 特定のロボットの温度データを取得する
         function loadTemperatureData(robotId) {
             fetchLatestData(robotId);
             fetchFunctionData('temperature', 'MAX', 'maxTemp', robotId);
@@ -124,7 +124,7 @@
             fetchFunctionData('temperature', 'AVG', 'avgTemp', robotId);
         }
     
-        // Fetch humidity data for a given robot
+        // Fetch humidity data for a given robot / 指定されたロボットの湿度データを取得します
         function loadHumidityData(robotId) {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=humidity`, true);
@@ -141,19 +141,19 @@
             fetchFunctionData('humidity', 'AVG', 'avgHumd', robotId);
         }
     
-        // Periodically update data for each robot
+        // Periodically update data for each robot / 各ロボットのデータを定期的に更新する
         function autoUpdateData() {
-            const robotIds = ['Rpi__1', 'Rpi__2']; // Add robot IDs to auto-update
+            const robotIds = ['Rpi__1', 'Rpi__2']; // Add robot IDs to auto-update / 自動更新にロボット ID を追加する
             robotIds.forEach(function(robotId) {
                 loadTemperatureData(robotId);
                 loadHumidityData(robotId);
             });
         }
     
-        // Load data when the page is loaded and set up periodic updates
+        // Load data when the page is loaded and set up periodic updates / ページのロード時にデータをロードし、定期的な更新を設定します
         window.onload = function() {
             loadRobotIds();
-            setInterval(autoUpdateData, 3000); // Update data every 5 seconds
+            setInterval(autoUpdateData, 3000); // Update data every 5 seconds / 5秒ごとにデータを更新
         };
     </script>
 </div>
