@@ -17,7 +17,7 @@
         <button class="tab" onclick="openTab(event, 'Tab3')">Sensor Readings</button>
         <button class="tab" onclick="openTab(event, 'Tab4')">Conditions</button>
     </div>
-    <div class="tab-content" id="Tab1">
+    <div class="tab-content" id="Tab1" style="display:block;">
         <p>Measuring Temperature and Humidity</p>
         
         <div class="table-container">
@@ -270,14 +270,14 @@
     </div>
     
    
-    <div class="tab-content" id="Tab4" style="display:none">
+    <div class="tab-content" id="Tab4" style="display:none;">
         <p>Conditions</p>
         <div class="tabs">
             <button class="tab active" onclick="openTab(event, 'Mixer')">Mixer</button>
             <button class="tab" onclick="openTab(event, 'Heater')">Heater</button>
         </div>
 
-        <div id="Mixer" class="tabcontent" style="display: block;">
+        <div id="Mixer" class="tabcontent" style="display: none;">
             <table>
                 <tr>
                     <th>Robot ID (Mixer)</th>
@@ -543,6 +543,25 @@
 </div>
 
 <script>
+    window.onload = function() {
+    // Hide all tabs by default
+    var tabContents = document.querySelectorAll('.tabcontent');
+    tabContents.forEach(function(tab) {
+        tab.style.display = "none";
+    });
+
+    // Show the Measure tab content by default
+    document.getElementById("TabMeasure").style.display = "block";
+
+    // Optionally, set the active class for the button (if you want it to be styled as active)
+    var tabs = document.querySelectorAll('.tab');
+    tabs.forEach(function(tab) {
+        tab.classList.remove('active');
+    });
+
+    document.querySelector('[onclick="openTab(event, \'Measure\')"]').classList.add('active');
+    };
+
     function openTab(event, tabId) {
         // Get all tabs and tab content
         const tabs = document.getElementsByClassName("tab");
@@ -560,7 +579,6 @@
 
         // Add active class to the clicked tab
         event.currentTarget.classList.add("active");
-
         // Show the corresponding tab content
         document.getElementById(tabId).style.display = "block";
         }
