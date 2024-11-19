@@ -542,26 +542,29 @@
 
 <script>
     function openTab(event, tabId) {
-        // Get all tabs and tab content
-        const tabs = document.getElementsByClassName("tab");
-        const tabContent = document.getElementsByClassName("tab-content");
+    // Get all tab buttons and tab content elements
+    const tabs = document.getElementsByClassName("tab");
+    const tabContents = document.getElementsByClassName("tabcontent");
 
-        // Remove active class from all tabs
-        for (let i = 0; i < tabs.length; i++) {
-            tabs[i].classList.remove("active");
-        }
+    // Loop through all tabs and deactivate them
+    for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("active");
+    }
 
-        // Hide all tab content
-        for (let i = 0; i < tabContent.length; i++) {
-            tabContent[i].style.display = "none";
-        }
+    // Loop through all tab content and hide them
+    for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+    }
 
-        // Add active class to the clicked tab
-        event.currentTarget.classList.add("active");
+    // Activate the clicked tab
+    event.currentTarget.classList.add("active");
 
-        // Show the corresponding tab content
-        document.getElementById(tabId).style.display = "block";
-        }
+    // Display the content for the clicked tab
+    const selectedTabContent = document.getElementById(tabId);
+    if (selectedTabContent) {
+        selectedTabContent.style.display = "block";
+    }
+}
 
     // This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
     function checkInputs(robotId) {
