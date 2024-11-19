@@ -89,7 +89,7 @@
             xhr.send();
         }
     
-        // Function to fetch the latest temperature data for a given robot
+        // Function to fetch the latest temperature data for a given robot / 特定のロボットの最新の温度データを取得する機能
         function fetchLatestData(robotId) {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=temperature`, true);
@@ -102,7 +102,7 @@
             xhr.send();
         }
     
-        // Function to fetch min, max, and average data for temperature and humidity for a given robot
+        // Function to fetch min, max, and average data for temperature and humidity for a given robot / 特定のロボットの温度と湿度の最小、最大、平均データを取得する関数
         function fetchFunctionData(type, func, elementId, robotId) {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", `http://localhost:3000/getFunc?robotID=${robotId}&type=${type}&func=${func}`, true);
@@ -116,7 +116,7 @@
             xhr.send();
         }
     
-        // Fetch temperature data for a given robot
+        // Fetch temperature data for a given robot / 特定のロボットの温度データを取得する
         function loadTemperatureData(robotId) {
             fetchLatestData(robotId);
             fetchFunctionData('temperature', 'MAX', 'maxTemp', robotId);
@@ -124,7 +124,7 @@
             fetchFunctionData('temperature', 'AVG', 'avgTemp', robotId);
         }
     
-        // Fetch humidity data for a given robot
+        // Fetch humidity data for a given robot / 指定されたロボットの湿度データを取得します
         function loadHumidityData(robotId) {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=humidity`, true);
@@ -141,19 +141,19 @@
             fetchFunctionData('humidity', 'AVG', 'avgHumd', robotId);
         }
     
-        // Periodically update data for each robot
+        // Periodically update data for each robot / 各ロボットのデータを定期的に更新する
         function autoUpdateData() {
-            const robotIds = ['Rpi__1', 'Rpi__2']; // Add robot IDs to auto-update
+            const robotIds = ['Rpi__1', 'Rpi__2']; // Add robot IDs to auto-update / 自動更新にロボット ID を追加する
             robotIds.forEach(function(robotId) {
                 loadTemperatureData(robotId);
                 loadHumidityData(robotId);
             });
         }
     
-        // Load data when the page is loaded and set up periodic updates
+        // Load data when the page is loaded and set up periodic updates / ページのロード時にデータをロードし、定期的な更新を設定します
         window.onload = function() {
             loadRobotIds();
-            setInterval(autoUpdateData, 3000); // Update data every 5 seconds
+            setInterval(autoUpdateData, 3000); // Update data every 3 seconds / 3秒ごとにデータを更新
         };
     </script>
 </div>
@@ -541,7 +541,7 @@
 </div>
 
 <script>
-// 4 Other Tabs, Measure/WeatherCondition/SensorReading/Conditions
+// For the other Tabs, Measure/WeatherCondition/SensorReading/Conditions 
     function openTab(evt, tabName) {
     // Hide all tabs
     const tabContents = document.querySelectorAll('.tab-content');
@@ -549,19 +549,20 @@
         tab.style.display = 'none';
     });
 
-    // Remove 'active' class from all tab buttons
+    // Remove 'active' class from all tab buttons / すべてのタブボタンから「アクティブ」クラスを削除します
     const tabs = document.querySelectorAll('.tab');
     tabs.forEach(function(tab) {
         tab.classList.remove('active');
     });
 
-    // Show the selected tab
+    // Show the selected tab / 選択したタブを表示します
     document.getElementById(tabName).style.display = 'block';
 
-    // Add 'active' class to the selected tab button
+    // Add 'active' class to the selected tab button / 選択したタブボタンに「アクティブ」クラスを追加します
     evt.currentTarget.classList.add('active');
 }
-// Mixer & Heater Tabs
+
+// To toggle the Mixer & Heater Tabs / ミキサータブとヒータータブを切り替えるには
 function toggleTab(evt, tabName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -599,7 +600,7 @@ document.getElementById('heaterTab').addEventListener('click', function() {
             alert("Set button clicked with values: Min Temp = " + minTemp + "°C, Max Temp = " + maxTemp + "°C, Min Humidity = " + minHumidity + "%, Max Humidity = " + maxHumidity + "%");
         }
 
-        // Call the time check function within this function
+        // Call the time check function within this function / この関数内で時刻チェック関数を呼び出します。
         checkTimeInputs(robotId);
     }
 
