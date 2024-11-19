@@ -151,7 +151,7 @@ app.get('/getRobotId', (req, res) => {
 });
 
 // Define the route to get latest data / 最新データを取得するためのルートを定義する
-// ie getLatest?RobotID=Rpi__1&type=temperature
+// ie getLatest?robotID=Rpi__1&type=temperature
 app.get('/getLatest', (req, res) => {
   const { robotID, type } = req.query;
 
