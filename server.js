@@ -7,7 +7,7 @@ const app = express();
 
 // Enable CORS for specific IP address (127.0.0.1) / 特定の IP アドレス (127.0.0.1) に対して CORS を有効にする
 const corsOptions = {
-  origin: ['http://192.168.11.2', 'http://127.0.0.1'],  // Allow requests from this address / このアドレスからのリクエストを許可する
+  origin: ['http://192.168.11.3', 'http://127.0.0.1'],  // Allow requests from this address / このアドレスからのリクエストを許可する
 methods: 'GET',
 };
 app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウェアをグローバルに適用する
@@ -63,7 +63,7 @@ app.get('/sendMode',(req,res) =>{
   
 // Create a connection to MySQL to an IP address /IP アドレスへの MySQL への接続を作成する
 const db = mysql.createConnection({
-  host: '192.168.11.2',     
+  host: '192.168.11.3',     
   user: 'root',          
   password: 'GPBL2425',   
   database: 'gpbl2425',
