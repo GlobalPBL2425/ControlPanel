@@ -48,7 +48,7 @@
     </div>
 
     <script>
-        // Function to load and display robot IDs (Rpi__1, Rpi__2, etc.) / / ロボットID（Rpi__1、Rpi__2など）を読み込んで表示する機能
+        // Function to load and display robot IDs (Rpi__1, Rpi__2, etc.) / ロボットID（Rpi__1、Rpi__2など）を読み込んで表示する機能
         function loadRobotIds() {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", "http://localhost:3000/getRobotId", true);
@@ -58,7 +58,7 @@
                     const compostTable = document.getElementById("compostTable");
                     
                     compostTable.innerHTML = ""; // Clear existing rows
-
+    
                     robotIds.sort(function(a, b) {
                         if (a.robotId === "Rpi__1") return -1;
                         if (b.robotId === "Rpi__1") return 1;
@@ -143,7 +143,10 @@
     
         // Periodically update data for each robot / 各ロボットのデータを定期的に更新する
         function autoUpdateData() {
-            const robotIds = ['Rpi__1', 'Rpi__2']; // Add robot IDs to auto-update / 自動更新にロボット ID を追加する
+            const compostTable = document.getElementById("compostTable");
+            const robotIds = Array.from(compostTable.querySelectorAll("tr td")).map(td => td.textContent);
+            
+            // Update temperature and humidity for all robot IDs dynamically
             robotIds.forEach(function(robotId) {
                 loadTemperatureData(robotId);
                 loadHumidityData(robotId);
@@ -156,6 +159,7 @@
             setInterval(autoUpdateData, 3000); // Update data every 3 seconds / 3秒ごとにデータを更新
         };
     </script>
+    
 </div>
 
 <div class="tab-content" id="Tab2" style="display:none">
