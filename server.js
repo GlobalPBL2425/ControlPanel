@@ -14,13 +14,8 @@ app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウ
 
 
 //MQTT PART 
-<<<<<<< Updated upstream
-// Set up MQTT client and connect to the broker / MQTT クライアントをセットアップしてブローカーに接続する
-const mqttBrokerUrl = 'mqtt://test.mosquitto.org'; // Replace with your broker's URL / ブローカーの URL に置き換えます
-=======
 // Set up MQTT client and connect to the broker
 const mqttBrokerUrl = 'mqtt://192.168.11.3:1883'; // Replace with your broker's URL
->>>>>>> Stashed changes
 const client = mqtt.connect(mqttBrokerUrl);
 
 
@@ -33,16 +28,11 @@ client.on('error', (err) => {
   console.error('MQTT connection error:', err);
 });
 
-<<<<<<< Updated upstream
 // Define an endpoint to send control mode to specific robot IDs
 // 特定のロボットIDに制御モードを送信するエンドポイントを定義する
 app.get('/sendMode',(req,res) =>{
 
   // Extract robotID and mode parameters from the query string / クエリ文字列から robotID と mode パラメータを取得します
-=======
-// example : http://localhost:3000/sendMode?robotID=Rpi__1&mode=auto
-app.get('/sendMode', (req, res) => {
->>>>>>> Stashed changes
   const { robotID, mode } = req.query;
 
   // Define the MQTT topic dynamically based on the robot ID / ロボットIDに基づいて動的にMQTTトピックを定義します
@@ -238,4 +228,3 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
-
