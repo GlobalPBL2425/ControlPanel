@@ -211,6 +211,20 @@
 
     <div class="tab-content" id="Tab3" style="display:none">
         <p>Sensor Readings</p>
+
+        <label for="filterRpi">
+            <span>Filter:</span>
+            <select id="filterRpi" onchange="fetchSensorData()">
+                <option value="all">All RPIs</option>
+                <option value="Rpi__1">Rpi__1</option>
+                <option value="Rpi__2">Rpi__2</option>
+                <option value="Rpi__3">Rpi__3</option>
+                <option value="Rpi__4">Rpi__4</option>
+                <option value="Rpi__5">Rpi__5</option>
+                <option value="Rpi__6">Rpi__6</option>
+            </select>
+        </label>
+        
         <!-- Data will be taken from MySQL/データは MySQL から取得されます-->
         <table id="sensorTable">
             <tr>
@@ -225,53 +239,63 @@
 
         <script>
             function fetchSensorData() {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://localhost:3000/getSensorData", true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const sensorData = JSON.parse(xhr.responseText);
-                    const table = document.getElementById("sensorTable");
+                const selectedFilter = document.getElementById("filterRpi").value; // Get selected filter value
+                const apiUrl =
+                    selectedFilter === "all"
+                        ? "http://localhost:3000/getSensorData"
+                        : `http://localhost:3000/getSensorData`; // Fetch all data, filtering will be client-side
 
-                    // Clear the table except the header row/ヘッダー行以外のテーブルをクリア
-                    table.innerHTML = `
-                        <tr>
-                            <th>Robot ID</th>
-                            <th>Timestamp</th>
-                            <th>Temperature</th>
-                            <th>Humidity</th>
-                            <th>Control Mode</th>
-                            <th>Motor Duty Cycle</th>
-                        </tr>
-                    `;
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", apiUrl, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        const sensorData = JSON.parse(xhr.responseText);
+                        const table = document.getElementById("sensorTable");
 
-                    // Insert new rows/新しい行を挿入
-                    sensorData.forEach(function(row) {
-                        const tr = document.createElement("tr");
-                        tr.innerHTML = `
-                            <td>${row.robotId}</td>
-                            <td>${row.timestamp}</td>
-                            <td>${row.temperature}</td>
-                            <td>${row.humidity}</td>
-                            <td>${row.controlMode}</td>
-                            <td>${row.motorDutyCycle}</td>
+                        // Clear the table except the header row
+                        table.innerHTML = `
+                            <tr>
+                                <th>Robot ID</th>
+                                <th>Timestamp</th>
+                                <th>Temperature</th>
+                                <th>Humidity</th>
+                                <th>Control Mode</th>
+                                <th>Motor Duty Cycle</th>
+                            </tr>
                         `;
-                        table.appendChild(tr);
-                    });
-                }
-            };
-            xhr.send();
-        }
 
-        // Fetch data every 5 seconds (5000 milliseconds)/データを5秒ごとに取得
-        setInterval(fetchSensorData, 5000);
+                        // Filter data if a specific RPI is selected
+                        const filteredData =
+                            selectedFilter === "all"
+                                ? sensorData
+                                : sensorData.filter((row) => row.robotId === selectedFilter);
 
-        // Initial fetch/最初のデータ取得
-        fetchSensorData();
+                        // Insert filtered rows
+                        filteredData.forEach(function (row) {
+                            const tr = document.createElement("tr");
+                            tr.innerHTML = `
+                                <td>${row.robotId}</td>
+                                <td>${row.timestamp}</td>
+                                <td>${row.temperature}</td>
+                                <td>${row.humidity}</td>
+                                <td>${row.controlMode}</td>
+                                <td>${row.motorDutyCycle}</td>
+                            `;
+                            table.appendChild(tr);
+                        });
+                    }
+                };
+                xhr.send();
+            }
+
+            // Fetch data every 5 seconds
+            setInterval(fetchSensorData, 5000);
+
+            // Initial fetch
+            fetchSensorData();
         </script>
-        
     </div>
-    
-   
+
     <div class="tab-content" id="Tab4" style="display:none">
         <p>Conditions</p>
         <div class="tabs">
