@@ -14,8 +14,13 @@ app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウ
 
 
 //MQTT PART 
+<<<<<<< Updated upstream
 // Set up MQTT client and connect to the broker / MQTT クライアントをセットアップしてブローカーに接続する
 const mqttBrokerUrl = 'mqtt://test.mosquitto.org'; // Replace with your broker's URL / ブローカーの URL に置き換えます
+=======
+// Set up MQTT client and connect to the broker
+const mqttBrokerUrl = 'mqtt://192.168.11.3:1883'; // Replace with your broker's URL
+>>>>>>> Stashed changes
 const client = mqtt.connect(mqttBrokerUrl);
 
 
@@ -28,22 +33,26 @@ client.on('error', (err) => {
   console.error('MQTT connection error:', err);
 });
 
+<<<<<<< Updated upstream
 // Define an endpoint to send control mode to specific robot IDs
 // 特定のロボットIDに制御モードを送信するエンドポイントを定義する
 app.get('/sendMode',(req,res) =>{
 
   // Extract robotID and mode parameters from the query string / クエリ文字列から robotID と mode パラメータを取得します
+=======
+// example : http://localhost:3000/sendMode?robotID=Rpi__1&mode=auto
+app.get('/sendMode', (req, res) => {
+>>>>>>> Stashed changes
   const { robotID, mode } = req.query;
 
   // Define the MQTT topic dynamically based on the robot ID / ロボットIDに基づいて動的にMQTTトピックを定義します
   const topic = `GPBL2425/SensorArray_1/${robotID}/controlType`;
 
-  const allowedModes = ['auto', 'timer'];  
+  const allowedModes = ['auto', 'timer'];
 
   if (!allowedModes.includes(mode)) {
     return res.status(400).send({ error: 'Invalid type' });
   }
-
 
   client.publish(topic, mode, (err) => {
     // Publish the mode to the specified MQTT topic / 指定されたMQTTトピックにモードを公開します
@@ -51,12 +60,10 @@ app.get('/sendMode',(req,res) =>{
       console.error('Failed to publish message:', err);
       return res.status(500).send('Failed to send MQTT message');
     }
-    console.log(`JSON message sent to topic "${topic}": ${messageString}`);
-    res.send(`JSON message sent to topic "${topic}"`);
+    console.log(`Message sent to topic "${topic}": ${mode}`);
+    res.send(`Message sent to topic "${topic}"`);
   });
 });
-
-
 
 //MYSQL PART
 
