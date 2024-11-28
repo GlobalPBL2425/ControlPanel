@@ -211,31 +211,30 @@ document.getElementById('heaterTab').addEventListener('click', function() {
 });
 
 
-    // This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
-    function checkInputs(robotId) {
-        const minTemp = document.getElementById(minTemp$,{robotId}).value;
-        const maxTemp = document.getElementById(maxTemp$,{robotId}).value;
-        const minHumidity = document.getElementById(minHumidity$,{robotId}).value;
-        const maxHumidity = document.getElementById(maxHumidity$,{robotId}).value;
+function checkAllInputs(robotId) {
+    // Temperature and Humidity Inputs
+    const minTemp = document.getElementById(`minTemp${robotId}`).value;
+    const maxTemp = document.getElementById(`maxTemp${robotId}`).value;
+    const minHumidity = document.getElementById(`minHumidity${robotId}`).value;
+    const maxHumidity = document.getElementById(`maxHumidity${robotId}`).value;
 
-        if (!minTemp || !maxTemp || !minHumidity || !maxHumidity) {
-            alert("Please fill in all temperature and humidity fields before setting.");
-        } else {
-            alert("Set button clicked with values: Min Temp = " + minTemp + "°C, Max Temp = " + maxTemp + "°C, Min Humidity = " + minHumidity + "%, Max Humidity = " + maxHumidity + "%");
-        }
+    // Time Inputs
+    const interval = document.getElementById(`interval${robotId}`).value;
+    const duration = document.getElementById(`duration${robotId}`).value;
 
-        // Call the time check function within this function / この関数内で時刻チェック関数を呼び出します。
-        checkTimeInputs(robotId);
+    // Check for Empty Inputs
+    if (!minTemp || !maxTemp || !minHumidity || !maxHumidity) {
+        alert("Please fill in all temperature and humidity fields before setting.");
+        return;
+    }
+    if (!interval || !duration) {
+        alert("Please fill in both interval and duration before setting the time.");
+        return;
     }
 
-    // This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
-    function checkTimeInputs(robotId) {
-        const interval = document.getElementById(interval1).value;
-        const duration = document.getElementById(duration1).value;
-
-        if (!interval || !duration) {
-            alert("Please fill in both interval and duration before setting the time.");
-        } else {
-            alert("Set Time button clicked with values: Interval = " + interval + " min(s), Duration = " + duration + " min(s)");
-        }
-    }
+    // If all inputs are valid
+    alert(`Set button clicked with values:
+        Min Temp = ${minTemp}°C, Max Temp = ${maxTemp}°C,
+        Min Humidity = ${minHumidity}%, Max Humidity = ${maxHumidity}%,
+        Interval = ${interval} min(s), Duration = ${duration} min(s)`);
+}
