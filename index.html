@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,94 +8,97 @@
     <link rel="stylesheet" href="style/index.css">
     <script src="script.js"></script>
 </head>
+
 <body>
 
-<h1 class="main-header">GPBL2425 System</h1>
+    <h1 class="main-header">GPBL2425 System</h1>
 
-<div class="folder">
-    <div class="tabs">
-        <button class="tab active" onclick="openTab(event, 'Tab1')">Measure</button>
-        <button class="tab" onclick="openTab(event, 'Tab2')">Weather Conditions</button>
-        <button class="tab" onclick="openTab(event, 'Tab3')">Sensor Readings</button>
-        <button class="tab" onclick="openTab(event, 'Tab4')">Conditions</button>
-    </div>
-    <div class="tab-content" id="Tab1">
-        <p>Measuring Temperature and Humidity</p>
-        
-        <div class="table-container">
-            <!-- Data will be taken from MySQL (Node.js)/データは MySQL から取得されます-->
-            <table>
-                <tr><th>Compost</th></tr>
-                <tbody id="compostTable"></tbody>
-            </table>
-            <table>
-                <tr>
-                    <th>Current Temperature</th>
-                    <th>Max Temp Value</th>
-                    <th>Min Temp Value</th>
-                    <th>Average Temp Value</th>
-                </tr>
-                <tbody id="temperatureTable"></tbody>
-            </table>
-            <table>
-                <tr>
-                    <th>Current Humidity</th>
-                    <th>Max Humidity</th>
-                    <th>Min Humidity</th>
-                    <th>Average Humidity</th>
-                </tr>
-                <tbody id="humidityTable"></tbody>
-            </table>
+    <div class="folder">
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'Tab1')">Measure</button>
+            <button class="tab" onclick="openTab(event, 'Tab2')">Weather Conditions</button>
+            <button class="tab" onclick="openTab(event, 'Tab3')">Sensor Readings</button>
+            <button class="tab" onclick="openTab(event, 'Tab4')">Conditions</button>
+        </div>
+        <div class="tab-content" id="Tab1">
+            <p>Measuring Temperature and Humidity</p>
+
+            <div class="table-container">
+                <!-- Data will be taken from MySQL (Node.js)/データは MySQL から取得されます-->
+                <table>
+                    <tr>
+                        <th>Compost</th>
+                    </tr>
+                    <tbody id="compostTable"></tbody>
+                </table>
+                <table>
+                    <tr>
+                        <th>Current Temperature</th>
+                        <th>Max Temp Value</th>
+                        <th>Min Temp Value</th>
+                        <th>Average Temp Value</th>
+                    </tr>
+                    <tbody id="temperatureTable"></tbody>
+                </table>
+                <table>
+                    <tr>
+                        <th>Current Humidity</th>
+                        <th>Max Humidity</th>
+                        <th>Min Humidity</th>
+                        <th>Average Humidity</th>
+                    </tr>
+                    <tbody id="humidityTable"></tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="tab-content" id="Tab2" style="display:none">
-    <p>Weather Condition</p>
-    <!-- Data will be taken from MySQL/データは MySQL から取得されます-->
+    <div class="tab-content" id="Tab2" style="display:none">
+        <p>Weather Condition</p>
+        <!-- Data will be taken from MySQL/データは MySQL から取得されます-->
         <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Min Temp</th>
-            <th>Max Temp</th>
-            <th>Min Hum</th>
-            <th>Max Hum</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>Cold</td>
-            <td>8.9</td>
-            <td>13.7</td>
-            <td> 76.7</td>
-            <td>86.3</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Hot</td>
-            <td>8.9</td>
-            <td>13.7</td>
-            <td> 76.7</td>
-            <td>86.3</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Warm</td>
-            <td>8.9</td>
-            <td>13.7</td>
-            <td> 76.7</td>
-            <td>86.3</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Dry</td>
-            <td>8.9</td>
-            <td>13.7</td>
-            <td> 76.7</td>
-            <td>86.3</td>
-        </tr>
-    </table>
-</div>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Min Temp</th>
+                <th>Max Temp</th>
+                <th>Min Hum</th>
+                <th>Max Hum</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Cold</td>
+                <td>8.9</td>
+                <td>13.7</td>
+                <td> 76.7</td>
+                <td>86.3</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Hot</td>
+                <td>8.9</td>
+                <td>13.7</td>
+                <td> 76.7</td>
+                <td>86.3</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Warm</td>
+                <td>8.9</td>
+                <td>13.7</td>
+                <td> 76.7</td>
+                <td>86.3</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Dry</td>
+                <td>8.9</td>
+                <td>13.7</td>
+                <td> 76.7</td>
+                <td>86.3</td>
+            </tr>
+        </table>
+    </div>
 
     <div class="tab-content" id="Tab3" style="display:none">
         <p>Sensor Readings</p>
@@ -259,140 +263,141 @@
                     <td>18:00</td>
                 </tr>
             </table>
-            </div>
+        </div>
 
-            <div id="Heater" class="tabcontent" style="display: none;">
-                <table>
-                    <tr>
-                        <th>Robot ID (Heater)</th>
-                        <th>Set Min Temperature</th>
-                        <th>Set Max Temperature</th>
-                        <th>Set Min Humididty</th>
-                        <th>Set Max Humididty</th>
-                        <th>Control Mode</th>
-                        <th>Time operation Conditions</th>
-                        <th>Start</th>
-                        <th>End</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                        <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                        <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                        <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                        <td>
-                            <div class="control-buttons">
-                                <button onclick="checkInputs(1)">Set</button>
-                                <button onclick="checkTimeInputs(1)">Set Time</button>
-                            </div>
-                        </td>
-                        <td>
-                            every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                            will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                        </td>
-                        <td>08:00</td>
-                        <td>18:00</td>
-                    </tr>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                        <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                        <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                        <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                        <td>
-                            <div class="control-buttons">
-                                <button onclick="checkInputs(1)">Set</button>
-                                <button onclick="checkTimeInputs(1)">Set Time</button>
-                            </div>
-                        </td>
-                        <td>
-                            every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                            will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                        </td>
-                        <td>08:00</td>
-                        <td>18:00</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td><input type="number" placeholder="15" min="0" max="100">°C</td>
-                        <td><input type="number" placeholder="30" min="0" max="100">°C</td>
-                        <td><input type="number" placeholder="40" min="0" max="100">%</td>
-                        <td><input type="number" placeholder="70" min="0" max="100">%</td>
-                        <td>
-                            <div class="control-buttons">
-                                <button onclick="checkInputs(1)">Set</button>
-                                <button onclick="checkTimeInputs(1)">Set Time</button>
-                            </div>
-                        </td>
-                        <td>
-                            every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                            will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                        </td>
-                        <td>08:00</td>
-                        <td>18:00</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                        <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                        <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                        <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                        <td>
-                            <div class="control-buttons">
-                                <button onclick="checkInputs(1)">Set</button>
-                                <button onclick="checkTimeInputs(1)">Set Time</button>
-                            </div>
-                        </td>
-                        <td>
-                            every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                            will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                        </td>
-                        <td>08:00</td>
-                        <td>18:00</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                        <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                        <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                        <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                        <td>
-                            <div class="control-buttons">
-                                <button onclick="checkInputs(1)">Set</button>
-                                <button onclick="checkTimeInput(1)">Set Time</button>
-                            </div>
-                        </td>
-                        <td>
-                            every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                            will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                        </td>
-                        <td>08:00</td>
-                        <td>18:00</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                        <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                        <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                        <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                        <td>
-                            <div class="control-buttons">
-                                <button onclick="checkInputs(1)">Set</button>
-                                <button onclick="checkTimeInputs(1)">Set Time</button>
-                            </div>
-                        </td>
-                        <td>
-                            every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                            will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                        </td>
-                        <td>08:00</td>
-                        <td>18:00</td>
-                    </tr>
-                </table>
-            </div>
+        <div id="Heater" class="tabcontent" style="display: none;">
+            <table>
+                <tr>
+                    <th>Robot ID (Heater)</th>
+                    <th>Set Min Temperature</th>
+                    <th>Set Max Temperature</th>
+                    <th>Set Min Humididty</th>
+                    <th>Set Max Humididty</th>
+                    <th>Control Mode</th>
+                    <th>Time operation Conditions</th>
+                    <th>Start</th>
+                    <th>End</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
+                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
+                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
+                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
+                    <td>
+                        <div class="control-buttons">
+                            <button onclick="checkInputs(1)">Set</button>
+                            <button onclick="checkTimeInputs(1)">Set Time</button>
+                        </div>
+                    </td>
+                    <td>
+                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
+                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
+                    </td>
+                    <td>08:00</td>
+                    <td>18:00</td>
+                </tr>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
+                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
+                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
+                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
+                    <td>
+                        <div class="control-buttons">
+                            <button onclick="checkInputs(1)">Set</button>
+                            <button onclick="checkTimeInputs(1)">Set Time</button>
+                        </div>
+                    </td>
+                    <td>
+                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
+                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
+                    </td>
+                    <td>08:00</td>
+                    <td>18:00</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><input type="number" placeholder="15" min="0" max="100">°C</td>
+                    <td><input type="number" placeholder="30" min="0" max="100">°C</td>
+                    <td><input type="number" placeholder="40" min="0" max="100">%</td>
+                    <td><input type="number" placeholder="70" min="0" max="100">%</td>
+                    <td>
+                        <div class="control-buttons">
+                            <button onclick="checkInputs(1)">Set</button>
+                            <button onclick="checkTimeInputs(1)">Set Time</button>
+                        </div>
+                    </td>
+                    <td>
+                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
+                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
+                    </td>
+                    <td>08:00</td>
+                    <td>18:00</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
+                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
+                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
+                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
+                    <td>
+                        <div class="control-buttons">
+                            <button onclick="checkInputs(1)">Set</button>
+                            <button onclick="checkTimeInputs(1)">Set Time</button>
+                        </div>
+                    </td>
+                    <td>
+                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
+                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
+                    </td>
+                    <td>08:00</td>
+                    <td>18:00</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
+                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
+                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
+                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
+                    <td>
+                        <div class="control-buttons">
+                            <button onclick="checkInputs(1)">Set</button>
+                            <button onclick="checkTimeInput(1)">Set Time</button>
+                        </div>
+                    </td>
+                    <td>
+                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
+                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
+                    </td>
+                    <td>08:00</td>
+                    <td>18:00</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
+                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
+                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
+                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
+                    <td>
+                        <div class="control-buttons">
+                            <button onclick="checkInputs(1)">Set</button>
+                            <button onclick="checkTimeInputs(1)">Set Time</button>
+                        </div>
+                    </td>
+                    <td>
+                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
+                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
+                    </td>
+                    <td>08:00</td>
+                    <td>18:00</td>
+                </tr>
+            </table>
         </div>
     </div>
-</div>
+    </div>
+    </div>
 </body>
+
 </html>
