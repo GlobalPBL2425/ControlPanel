@@ -8,19 +8,14 @@ const app = express();
 // Enable CORS for specific IP address (127.0.0.1) / 特定の IP アドレス (127.0.0.1) に対して CORS を有効にする
 const corsOptions = {
   origin: ['http://192.168.11.3', 'http://127.0.0.1'],  // Allow requests from this address / このアドレスからのリクエストを許可する
-methods: 'GET',
+  methods: 'GET',
 };
 app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウェアをグローバルに適用する
 
 
 //MQTT PART 
-<<<<<<< Updated upstream
-// Set up MQTT client and connect to the broker
-const mqttBrokerUrl = 'mqtt://192.168.11.3:1883'; // Replace with your broker's URL
-=======
 // Set up MQTT client and connect to the broker / MQTT クライアントをセットアップしてブローカーに接続する
 const mqttBrokerUrl = 'http://192.168.11.3'; // Replace with your broker's URL / ブローカーの URL に置き換えます
->>>>>>> Stashed changes
 const client = mqtt.connect(mqttBrokerUrl);
 
 
@@ -35,7 +30,7 @@ client.on('error', (err) => {
 
 // Define an endpoint to send control mode to specific robot IDs
 // 特定のロボットIDに制御モードを送信するエンドポイントを定義する
-app.get('/sendMode',(req,res) =>{
+app.get('/sendMode', (req, res) => {
 
   // Extract robotID and mode parameters from the query string / クエリ文字列から robotID と mode パラメータを取得します
   const { robotID, mode } = req.query;
@@ -43,7 +38,7 @@ app.get('/sendMode',(req,res) =>{
   // Define the MQTT topic dynamically based on the robot ID / ロボットIDに基づいて動的にMQTTトピックを定義します
   const topic = `GPBL2425/SensorArray_1/${robotID}/controlType`;
 
-  const allowedModes = ['auto', 'timer'];  
+  const allowedModes = ['auto', 'timer'];
 
   if (!allowedModes.includes(mode)) {
     return res.status(400).send({ error: 'Invalid type' });
@@ -65,12 +60,12 @@ app.get('/sendMode',(req,res) =>{
 
 //MYSQL PART
 
-  
+
 // Create a connection to MySQL to an IP address /IP アドレスへの MySQL への接続を作成する
 const db = mysql.createConnection({
-  host: '192.168.11.3',     
-  user: 'root',          
-  password: 'GPBL2425',   
+  host: '192.168.11.3',
+  user: 'root',
+  password: 'GPBL2425',
   database: 'gpbl2425',
   port: 3306
 });
@@ -83,12 +78,12 @@ db.connect((err) => {
 
 // Define a route to get sensor data / センサーデータを取得するルートを定義する
 app.get('/getSensorData', (req, res) => {
-  const query = 'SELECT * FROM sensorreading'; 
+  const query = 'SELECT * FROM sensorreading';
   console.log(query);
-  
+
   db.query(query, (err, result) => {
     if (err) {
-        console.error('Database query failed:', err);
+      console.error('Database query failed:', err);
       res.status(500).send({ error: 'Database query failed' });
       return;
     }
@@ -102,12 +97,12 @@ app.get('/getSensorData', (req, res) => {
 
 // Define a route to get sensor temperature data / センサー温度データを取得するルートを定義する
 app.get('/getSensorTemp', (req, res) => {
-  const query = 'SELECT * FROM sensorreading'; 
+  const query = 'SELECT * FROM sensorreading';
   console.log(query);
-  
+
   db.query(query, (err, result) => {
     if (err) {
-        console.error('Database query failed:', err);
+      console.error('Database query failed:', err);
       res.status(500).send({ error: 'Database query failed' });
       return;
     }
@@ -120,12 +115,12 @@ app.get('/getSensorTemp', (req, res) => {
 
 // Define a route to get sensor humidity data / センサーの湿度データを取得するルートを定義する
 app.get('/getSensorHumd', (req, res) => {
-  const query = 'SELECT * FROM sensorreading'; 
+  const query = 'SELECT * FROM sensorreading';
   console.log(query);
-  
+
   db.query(query, (err, result) => {
     if (err) {
-        console.error('Database query failed:', err);
+      console.error('Database query failed:', err);
       res.status(500).send({ error: 'Database query failed' });
       return;
     }
@@ -138,19 +133,19 @@ app.get('/getSensorHumd', (req, res) => {
 
 // Define a route to get each distinct robot ID / それぞれのロボットIDを取得するためのルートを定義する
 app.get('/getRobotId', (req, res) => {
-  const query = 'SELECT DISTINCT robotId FROM sensorreading'; 
+  const query = 'SELECT DISTINCT robotId FROM sensorreading';
   console.log(query);
-  
+
   db.query(query, (err, result) => {
     if (err) {
-        console.error('Database query failed:', err);
+      console.error('Database query failed:', err);
       res.status(500).send({ error: 'Database query failed' });
       return;
     }
 
 
     console.log('Database result:', result);
-    res.json(result); 
+    res.json(result);
 
   });
 });
@@ -169,7 +164,7 @@ app.get('/getLatest', (req, res) => {
       ORDER BY timestamp DESC 
       LIMIT 1
     `;
-    
+
     console.log(query);
 
     // Execute the query with parameters
@@ -217,7 +212,7 @@ app.get('/getFunc', (req, res) => {
     WHERE robotId = ?
   `;
 
-  console.log(query);       
+  console.log(query);
 
   // Execute the query with parameters
   db.query(query, [robotID], (err, result) => {

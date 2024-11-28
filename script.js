@@ -1,22 +1,22 @@
- // Function to load and display robot IDs (Rpi__1, Rpi__2, etc.) / ロボットID（Rpi__1、Rpi__2など）を読み込んで表示する機能
- function loadRobotIds() {
+// Function to load and display robot IDs (Rpi__1, Rpi__2, etc.) / ロボットID（Rpi__1、Rpi__2など）を読み込んで表示する機能
+function loadRobotIds() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "http://localhost:3000/getRobotId", true);
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const robotIds = JSON.parse(xhr.responseText);
             const compostTable = document.getElementById("compostTable");
-            
+
             compostTable.innerHTML = ""; // Clear existing rows
 
-            robotIds.sort(function(a, b) {
+            robotIds.sort(function (a, b) {
                 if (a.robotId === "Rpi__1") return -1;
                 if (b.robotId === "Rpi__1") return 1;
                 return 0;
             });
 
             // Populate table with robot IDs (just one row per robot)
-            robotIds.forEach(function(item) {
+            robotIds.forEach(function (item) {
                 const row = document.createElement("tr");
                 row.innerHTML = `<td>${item.robotId}</td>`;
                 compostTable.appendChild(row);
@@ -43,7 +43,7 @@
 function fetchLatestData(robotId) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=temperature`, true);
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
             document.getElementById(`currentTemp-${robotId}`).textContent = data[0]?.temperature || '--';
@@ -56,7 +56,7 @@ function fetchLatestData(robotId) {
 function fetchFunctionData(type, func, elementId, robotId) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `http://localhost:3000/getFunc?robotID=${robotId}&type=${type}&func=${func}`, true);
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
             const jsonquery = `${func}(${type})`;
@@ -78,7 +78,7 @@ function loadTemperatureData(robotId) {
 function loadHumidityData(robotId) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `http://localhost:3000/getLatest?robotID=${robotId}&type=humidity`, true);
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
             document.getElementById(`currentHumd-${robotId}`).textContent = data[0]?.humidity || '--';
@@ -95,16 +95,16 @@ function loadHumidityData(robotId) {
 function autoUpdateData() {
     const compostTable = document.getElementById("compostTable");
     const robotIds = Array.from(compostTable.querySelectorAll("tr td")).map(td => td.textContent);
-    
+
     // Update temperature and humidity for all robot IDs dynamically
-    robotIds.forEach(function(robotId) {
+    robotIds.forEach(function (robotId) {
         loadTemperatureData(robotId);
         loadHumidityData(robotId);
     });
 }
 
 // Load data when the page is loaded and set up periodic updates / ページのロード時にデータをロードし、定期的な更新を設定します
-window.onload = function() {
+window.onload = function () {
     loadRobotIds();
     setInterval(autoUpdateData, 3000); // Update data every 3 seconds / 3秒ごとにデータを更新
 };
@@ -169,13 +169,13 @@ fetchSensorData();
 function openTab(evt, tabName) {
     // Hide all tabs
     const tabContents = document.querySelectorAll('.tab-content');
-    tabContents.forEach(function(tab) {
+    tabContents.forEach(function (tab) {
         tab.style.display = 'none';
     });
 
     // Remove 'active' class from all tab buttons / すべてのタブボタンから「アクティブ」クラスを削除します
     const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(function(tab) {
+    tabs.forEach(function (tab) {
         tab.classList.remove('active');
     });
 
@@ -202,40 +202,40 @@ function toggleTab(evt, tabName) {
 }
 
 // Add event listeners for tabs
-document.getElementById('mixerTab').addEventListener('click', function() {
+document.getElementById('mixerTab').addEventListener('click', function () {
     toggleTab('mixerContent');
 });
 
-document.getElementById('heaterTab').addEventListener('click', function() {
+document.getElementById('heaterTab').addEventListener('click', function () {
     toggleTab('heaterContent');
 });
 
 
-    // This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
-    function checkInputs(robotId) {
-        const minTemp = document.getElementById(minTemp$,{robotId}).value;
-        const maxTemp = document.getElementById(maxTemp$,{robotId}).value;
-        const minHumidity = document.getElementById(minHumidity$,{robotId}).value;
-        const maxHumidity = document.getElementById(maxHumidity$,{robotId}).value;
+// This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
+function checkInputs(robotId) {
+    const minTemp = document.getElementById(minTemp$, { robotId }).value;
+    const maxTemp = document.getElementById(maxTemp$, { robotId }).value;
+    const minHumidity = document.getElementById(minHumidity$, { robotId }).value;
+    const maxHumidity = document.getElementById(maxHumidity$, { robotId }).value;
 
-        if (!minTemp || !maxTemp || !minHumidity || !maxHumidity) {
-            alert("Please fill in all temperature and humidity fields before setting.");
-        } else {
-            alert("Set button clicked with values: Min Temp = " + minTemp + "°C, Max Temp = " + maxTemp + "°C, Min Humidity = " + minHumidity + "%, Max Humidity = " + maxHumidity + "%");
-        }
-
-        // Call the time check function within this function / この関数内で時刻チェック関数を呼び出します。
-        checkTimeInputs(robotId);
+    if (!minTemp || !maxTemp || !minHumidity || !maxHumidity) {
+        alert("Please fill in all temperature and humidity fields before setting.");
+    } else {
+        alert("Set button clicked with values: Min Temp = " + minTemp + "°C, Max Temp = " + maxTemp + "°C, Min Humidity = " + minHumidity + "%, Max Humidity = " + maxHumidity + "%");
     }
 
-    // This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
-    function checkTimeInputs(robotId) {
-        const interval = document.getElementById(interval1).value;
-        const duration = document.getElementById(duration1).value;
+    // Call the time check function within this function / この関数内で時刻チェック関数を呼び出します。
+    checkTimeInputs(robotId);
+}
 
-        if (!interval || !duration) {
-            alert("Please fill in both interval and duration before setting the time.");
-        } else {
-            alert("Set Time button clicked with values: Interval = " + interval + " min(s), Duration = " + duration + " min(s)");
-        }
+// This function will check if the input is empty and it will prompt the user to input a number / この関数は入力が空かどうかをチェックし、ユーザーに数値の入力を求めます。
+function checkTimeInputs(robotId) {
+    const interval = document.getElementById(interval1).value;
+    const duration = document.getElementById(duration1).value;
+
+    if (!interval || !duration) {
+        alert("Please fill in both interval and duration before setting the time.");
+    } else {
+        alert("Set Time button clicked with values: Interval = " + interval + " min(s), Duration = " + duration + " min(s)");
     }
+}
