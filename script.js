@@ -266,3 +266,19 @@ function checkTimeInputs(robotId) {
         alert("Set Time button clicked with values: Interval = " + interval + " min(s), Duration = " + duration + " min(s)");
     }
 }
+
+function getRobotInputs(robotId, type) {
+    const prefix = type.toLowerCase();
+    return {
+        min_temp: parseFloat(document.getElementById(`${prefix}_min_temp_${robotId}`).value) || 0,
+        max_temp: parseFloat(document.getElementById(`${prefix}_max_temp_${robotId}`).value) || 0,
+        min_humidity: parseFloat(document.getElementById(`${prefix}_min_humidity_${robotId}`).value) || 0,
+        max_humidity: parseFloat(document.getElementById(`${prefix}_max_humidity_${robotId}`).value) || 0,
+        time_interval: parseInt(document.getElementById(`${prefix}_interval_${robotId}`).value) || 0,
+        duration: parseInt(document.getElementById(`${prefix}_duration_${robotId}`).value) || 0
+    };
+}
+function checkAllInputs(robotId, type) {
+    const data = getRobotInputs(robotId, type);
+    console.log('Robot Settings:', data);
+}
