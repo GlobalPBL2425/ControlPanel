@@ -14,8 +14,13 @@ app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウ
 
 
 //MQTT PART 
+<<<<<<< Updated upstream
 // Set up MQTT client and connect to the broker
 const mqttBrokerUrl = 'mqtt://192.168.11.3:1883'; // Replace with your broker's URL
+=======
+// Set up MQTT client and connect to the broker / MQTT クライアントをセットアップしてブローカーに接続する
+const mqttBrokerUrl = 'http://192.168.11.3'; // Replace with your broker's URL / ブローカーの URL に置き換えます
+>>>>>>> Stashed changes
 const client = mqtt.connect(mqttBrokerUrl);
 
 
@@ -38,11 +43,12 @@ app.get('/sendMode',(req,res) =>{
   // Define the MQTT topic dynamically based on the robot ID / ロボットIDに基づいて動的にMQTTトピックを定義します
   const topic = `GPBL2425/SensorArray_1/${robotID}/controlType`;
 
-  const allowedModes = ['auto', 'timer'];
+  const allowedModes = ['auto', 'timer'];  
 
   if (!allowedModes.includes(mode)) {
     return res.status(400).send({ error: 'Invalid type' });
   }
+
 
   client.publish(topic, mode, (err) => {
     // Publish the mode to the specified MQTT topic / 指定されたMQTTトピックにモードを公開します
@@ -54,6 +60,8 @@ app.get('/sendMode',(req,res) =>{
     res.send(`Message sent to topic "${topic}"`);
   });
 });
+
+
 
 //MYSQL PART
 
