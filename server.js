@@ -14,13 +14,8 @@ app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウ
 
 
 //MQTT PART 
-<<<<<<< Updated upstream
-// Set up MQTT client and connect to the broker
-const mqttBrokerUrl = 'mqtt://192.168.11.3:1883'; // Replace with your broker's URL
-=======
 // Set up MQTT client and connect to the broker / MQTT クライアントをセットアップしてブローカーに接続する
 const mqttBrokerUrl = 'http://192.168.11.3'; // Replace with your broker's URL / ブローカーの URL に置き換えます
->>>>>>> Stashed changes
 const client = mqtt.connect(mqttBrokerUrl);
 
 
@@ -231,8 +226,64 @@ app.get('/getFunc', (req, res) => {
 });
 
 
+// Query to get from one timestamp to another
+// Query example ---  GET /getList?robotID=rpi_1&startime=2024-11-01T00:00:00&endtime=2024-11-30T23:59:59 
+app.get('/getList', (req, res) => {
+  const { robotID, startime, endtime } = req.query;
+
+  // Check for missing parameters
+  if (!robotID || !startime || !endtime) {
+    return res.status(400).send({ 
+      error: 'Missing required query parameters. Please provide robotID, startime, and endtime.' 
+    });
+  }
+
+  // Validate date format (assuming ISO 8601 format)
+  const isValidDate = (date) => !isNaN(Date.parse(date));
+  if (!isValidDate(startime) || !isValidDate(endtime)) {
+    return res.status(400).send({ 
+      error: 'Invalid date format. Please use a valid ISO 8601 date format (e.g., 2024-11-01T00:00:00).' 
+    });
+  }
+
+  // Validate that startime is before endtime
+  if (new Date(startime) >= new Date(endtime)) {
+    return res.status(400).send({ 
+      error: 'Invalid time range. startime must be earlier than endtime.' 
+    });
+  }
+
+  // Prepare and execute the query
+  const query = `
+    SELECT * 
+    FROM sensorreading 
+    WHERE robotId = ? 
+    AND timestamp BETWEEN ? AND ?`;
+  
+  db.query(query, [robotID, startime, endtime], (err, result) => {
+    if (err) {
+      console.error('Database query failed:', err);
+      return res.status(500).send({ 
+        error: 'Database query failed. Please try again later.' 
+      });
+    }
+
+    // If no results found, return an appropriate message
+    if (result.length === 0) {
+      return res.status(404).send({ 
+        message: 'No records found for the given robotID and time range.' 
+      });
+    }
+
+    // Success: Return the query result
+    res.json(result);
+  });
+});
+
+
 // Start the server on port 3000 / ポート 3000 でサーバーを起動します
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
