@@ -176,17 +176,45 @@ app.get('/getRobotId', (req, res) => {
   });
 });
 
-// Define the route to get latest data / 最新データを取得するためのルートを定義する
-// ie getLatest?robotID=Rpi__1&type=temperature
-app.get('/getLatest', (req, res) => {
-  const { robotID, type } = req.query;
 
-  if (robotID && type) {
+// Route to get Sensor IDs for a specific robot
+app.get('/getSensorId', (req, res) => {
+  const robotId = req.query.robotId;  // Get the robotId from the query string
+  
+  // Ensure robotId is provided
+  if (!robotId) {
+    return res.status(400).send({ error: 'robotId is required' });
+  }
+
+  // Query to get distinct sensorId for a specific robotId
+  const query = 'SELECT DISTINCT sensorId FROM sensorreading WHERE robotId = ?';
+  console.log(query, [robotId]);
+
+  db.query(query, [robotId], (err, result) => {
+    if (err) {
+      console.error('Database query failed:', err);
+      res.status(500).send({ error: 'Database query failed' });
+      return;
+    }
+
+    console.log('Database result:', result);
+    res.json(result);  // Send the result as JSON
+  });
+});
+
+
+// Define the route to get latest data / 最新データを取得するためのルートを定義する
+// ie getLatest?robotID=Rpi__1&sensorID=Sensor__1&type=temperature
+app.get('/getLatest', (req, res) => {
+  const { robotID,sensorID, type } = req.query;
+
+  if (robotID && type && sensorID) {
     // Use parameterized query to avoid SQL injection
     const query = `
       SELECT ${mysql.escapeId(type)} 
       FROM sensorreading 
       WHERE robotId = ? 
+      AND sensorId = ?
       ORDER BY timestamp DESC 
       LIMIT 1
     `;
@@ -194,7 +222,7 @@ app.get('/getLatest', (req, res) => {
     console.log(query);
 
     // Execute the query with parameters
-    db.query(query, [robotID], (err, result) => {
+    db.query(query, [robotID,sensorID], (err, result) => {
       if (err) {
         console.error('Database query failed:', err);
         res.status(500).send({ error: 'Database query failed' });
@@ -210,17 +238,17 @@ app.get('/getLatest', (req, res) => {
 
 
 // Define the route to get average of data / 
-// ie getFunc?robotID=Rpi__1&type=temperature&func=MAX
+// ie getFunc?robotID=Rpi__1&sensorID=Sensor__1&type=temperature&func=MAX
 app.get('/getFunc', (req, res) => {
-  const { robotID, type, func } = req.query;
+  const { robotID, sensorID, type, func } = req.query;
 
   // Define valid columns and functions
   const allowedFunctions = ['AVG', 'MIN', 'MAX'];
   const allowedTypes = ['temperature', 'humidity'];  // Add more valid types (columns) here
 
   // Validate the input parameters
-  if (!robotID || !type || !func) {
-    return res.status(400).send({ error: 'Missing RobotID, type, or func' });
+  if (!robotID || !sensorID || !type || !func) {
+    return res.status(400).send({ error: 'Missing RobotID, sensorID, type, or func' });
   }
 
   if (!allowedFunctions.includes(func.toUpperCase())) {
@@ -233,24 +261,32 @@ app.get('/getFunc', (req, res) => {
 
   // Use parameterized query to avoid SQL injection
   const query = `
-    SELECT ${func.toUpperCase()}(${type}) 
+    SELECT ${func.toUpperCase()}(${type}) AS result
     FROM sensorreading 
-    WHERE robotId = ?
+    WHERE robotId = ? 
+    AND sensorId = ?
   `;
 
   console.log(query);
 
   // Execute the query with parameters
-  db.query(query, [robotID], (err, result) => {
+  db.query(query, [robotID, sensorID], (err, result) => {
     if (err) {
       console.error('Database query failed:', err);
       return res.status(500).send({ error: 'Database query failed' });
     }
+    
     console.log('Database result:', result);
-    res.json(result);
+    
+    // Extract the result from the query response
+    if (result.length === 0) {
+      return res.status(404).send({ error: 'No data found for the given parameters' });
+    }
+
+    // Return the result from the aggregate function (AVG, MIN, MAX)
+    res.json(result[0].result);  // This sends the result of the aggregate function
   });
 });
-
 
 // Query to get from one timestamp to another
 // Query example ---  GET /getList?robotID=rpi_1&startime=2024-11-01T00:00:00&endtime=2024-11-30T23:59:59 
@@ -305,6 +341,32 @@ app.get('/getList', (req, res) => {
     res.json(result);
   });
 });
+
+
+// Example of a combined endpoint to fetch all sensor data (current, min, max, average) for a given robot
+app.get('/getAllSensorData', (req, res) => {
+  const robotId = req.query.robotId;
+  const query = `
+      SELECT 
+          sensorId, 
+          temperature, humidity, timestamp,
+          MAX(temperature) AS maxTemp, MIN(temperature) AS minTemp, AVG(temperature) AS avgTemp,
+          MAX(humidity) AS maxHumd, MIN(humidity) AS minHumd, AVG(humidity) AS avgHumd
+      FROM sensorreading
+      WHERE robotId = ?
+      GROUP BY sensorId;
+  `;
+
+  db.query(query, [robotId], (err, result) => {
+      if (err) {
+          console.error('Database query failed:', err);
+          res.status(500).send({ error: 'Database query failed' });
+          return;
+      }
+      res.json(result);
+  });
+});
+
 
 
 // Start the server on port 3000 / ポート 3000 でサーバーを起動します
