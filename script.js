@@ -110,23 +110,24 @@ window.onload = function () {
 };
 
 function fetchSensorData() {
-    const selectedFilter = document.getElementById("filterRpi").value; // Get selected filter value
+    const selectedFilter = document.getElementById("filterRpi").value;
     const apiUrl =
         selectedFilter === "all"
             ? "http://localhost:3000/getSensorData"
-            : `http://localhost:3000/getSensorData`; // Fetch all data, filtering will be client-side
+            : `http://localhost:3000/getSensorData?robotId=${selectedFilter}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open("GET", apiUrl, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const sensorData = JSON.parse(xhr.responseText);
-            const table = document.getElementById("sensorTable");
+            console.log("API Response:", sensorData); // Debugging
 
-            // Clear the table except the header row
+            const table = document.getElementById("sensorTable");
             table.innerHTML = `
                 <tr>
                     <th>Robot ID</th>
+                    <th>Sensor ID</th>
                     <th>Timestamp</th>
                     <th>Temperature</th>
                     <th>Humidity</th>
@@ -135,17 +136,23 @@ function fetchSensorData() {
                 </tr>
             `;
 
-            // Filter data if a specific RPI is selected
             const filteredData =
                 selectedFilter === "all"
                     ? sensorData
-                    : sensorData.filter((row) => row.robotId === selectedFilter);
+                    : sensorData.filter((row) => row.robotId.toString() === selectedFilter);
 
-            // Insert filtered rows
+            if (filteredData.length === 0) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td colspan="7">No data available</td>`;
+                table.appendChild(tr);
+                return;
+            }
+
             filteredData.forEach(function (row) {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>${row.robotId}</td>
+                    <td>${row.sensorId}</td>
                     <td>${row.timestamp}</td>
                     <td>${row.temperature}</td>
                     <td>${row.humidity}</td>
@@ -221,6 +228,9 @@ function getRobotInputs(robotId, type) {
         max_humidity: parseFloat(document.getElementById(`${prefix}_max_humidity_${robotId}`).value) || 0,
         time_interval: parseInt(document.getElementById(`${prefix}_interval_${robotId}`).value) || 0,
         duration: parseInt(document.getElementById(`${prefix}_duration_${robotId}`).value) || 0
+        //humindity var
+        //temp var
+        //autoduration
     };
 }
 

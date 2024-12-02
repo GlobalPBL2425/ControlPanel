@@ -13,7 +13,7 @@ const corsOptions = {
 app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウェアをグローバルに適用する
 
 
-//MQTT PART 
+//MQTT PART START
 // Set up MQTT client and connect to the broker / MQTT クライアントをセットアップしてブローカーに接続する
 const mqttBrokerUrl = 'http://192.168.11.3'; // Replace with your broker's URL / ブローカーの URL に置き換えます
 const client = mqtt.connect(mqttBrokerUrl);
@@ -33,10 +33,10 @@ client.on('error', (err) => {
 app.get('/sendMode', (req, res) => {
 
   // Extract robotID and mode parameters from the query string / クエリ文字列から robotID と mode パラメータを取得します
-  const { robotID, mode } = req.query;
+  const { robotID,sensorID, mode } = req.query;
 
   // Define the MQTT topic dynamically based on the robot ID / ロボットIDに基づいて動的にMQTTトピックを定義します
-  const topic = `GPBL2425/SensorArray_1/${robotID}/controlType`;
+  const topic = `GPBL2425/${robotID}/${sensorID}/controlType`;
 
   const allowedModes = ['auto', 'timer'];
 
@@ -56,9 +56,35 @@ app.get('/sendMode', (req, res) => {
   });
 });
 
+app.get('/SendThres', (req, res) => {
+  // Extract query parameters
+  const { robotID, sensorID, type } = req.query;
 
+  // Validate inputs
+  if (!robotID || !sensorID || !type) {
+    return res.status(400).send({ error: 'robotID, sensorID, and type are required parameters' });
+  }
 
-//MYSQL PART
+  // Generate the threshold JSON using your custom function
+  const thresjson = checkAllInputs(robotID, sensorID, type);
+
+  // Define the MQTT topic dynamically
+  const topic = `GPBL2425/${robotID}/${sensorID}/Motor/threshold`;
+
+  // Publish the JSON data to the MQTT topic
+  client.publish(topic, JSON.stringify(thresjson), { qos: 1 }, (err) => {
+    if (err) {
+      console.error('Failed to publish JSON data:', err);
+      return res.status(500).send('Failed to send MQTT message');
+    }
+
+    console.log(`JSON data published successfully to topic "${topic}":`, thresjson);
+    res.send(`Message sent to topic "${topic}": ${JSON.stringify(thresjson)}`);
+  });
+});
+
+//MQTT PART END
+//MYSQL PART START
 
 
 // Create a connection to MySQL to an IP address /IP アドレスへの MySQL への接続を作成する
