@@ -56,7 +56,7 @@ function autoUpdateData() {
                         const sensorIds = JSON.parse(xhr2.responseText);
 
                         // Log the sensor IDs or process them further
-                        console.log(`Robot ID: ${robotId}, Sensor IDs:`, sensorIds);
+                        //console.log(`Robot ID: ${robotId}, Sensor IDs:`, sensorIds);
 
                         // Example: Iterate through sensor IDs and load data
                         sensorIds.forEach(function (sensor) {
@@ -187,24 +187,67 @@ document.getElementById('heaterTab').addEventListener('click', function () {
 });
 
 // Function to retrieve input values for a specific robot and type
-function getRobotInputs(robotId, type) {
+function getRobotInputs(robotId, sensorId, type) {
+    // Check if type is a valid string before calling toLowerCase
+    if (typeof type !== 'string') {
+        console.error("Invalid type provided:", type);
+        return {}; // Return empty object if type is invalid
+    }
+
     const prefix = type.toLowerCase();  // Convert type to lowercase for consistent naming convention
     return {
-        min_temp: parseFloat(document.getElementById(`${prefix}_min_temp_${robotId}`).value) || 0,
-        max_temp: parseFloat(document.getElementById(`${prefix}_max_temp_${robotId}`).value) || 0,
-        min_humidity: parseFloat(document.getElementById(`${prefix}_min_humidity_${robotId}`).value) || 0,
-        max_humidity: parseFloat(document.getElementById(`${prefix}_max_humidity_${robotId}`).value) || 0,
-        time_interval: parseInt(document.getElementById(`${prefix}_interval_${robotId}`).value) || 0,
-        duration: parseInt(document.getElementById(`${prefix}_duration_${robotId}`).value) || 0
-        //humindity var
-        //temp var
-        //autoduration
+        min_temp: parseFloat(document.getElementById(`${prefix}_min_temp_${robotId}_${sensorId}`)?.value) || 0,
+        max_temp: parseFloat(document.getElementById(`${prefix}_max_temp_${robotId}_${sensorId}`)?.value) || 0,
+        min_humidity: parseFloat(document.getElementById(`${prefix}_min_humidity_${robotId}_${sensorId}`)?.value) || 0,
+        max_humidity: parseFloat(document.getElementById(`${prefix}_max_humidity_${robotId}_${sensorId}`)?.value) || 0,
+        time_interval: getTotalSeconds(
+            `${prefix}_interval_hour_${robotId}_${sensorId}`,
+            `${prefix}_interval_min_${robotId}_${sensorId}`,
+            `${prefix}_interval_sec_${robotId}_${sensorId}`
+        ),
+        duration: getTotalSeconds(
+            `${prefix}_duration_hour_${robotId}_${sensorId}`,
+            `${prefix}_duration_min_${robotId}_${sensorId}`,
+            `${prefix}_duration_sec_${robotId}_${sensorId}`
+        ),
+        humid_var: getTotalSeconds(
+            `${prefix}_humd_var_hour_${robotId}_${sensorId}`,
+            `${prefix}_humd_var_min_${robotId}_${sensorId}`,
+            `${prefix}_humd_var_sec_${robotId}_${sensorId}`
+        ),
+        temp_var: getTotalSeconds(
+            `${prefix}_temp_var_hour_${robotId}_${sensorId}`,
+            `${prefix}_temp_var_min_${robotId}_${sensorId}`,
+            `${prefix}_temp_var_sec_${robotId}_${sensorId}`
+        ),
+        auto_duration: getTotalSeconds(
+            `${prefix}_auto_hour_${robotId}_${sensorId}`,
+            `${prefix}_auto_min_${robotId}_${sensorId}`,
+            `${prefix}_auto_sec_${robotId}_${sensorId}`
+        ),
     };
 }
 
+// Function to calculate total seconds from hour, minute, and second inputs
+function getTotalSeconds(hourId, minId, secId) {
+    const hours = parseInt(document.getElementById(hourId)?.value) || 0;
+    const minutes = parseInt(document.getElementById(minId)?.value) || 0;
+    const seconds = parseInt(document.getElementById(secId)?.value) || 0;
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
 // Function to check all inputs for a specific robot and type
-function checkAllInputs(robotId, type) {
-    const data = getRobotInputs(robotId, type);
+function checkAllInputs(robotId, sensorId, type) {
+    console.log("robotId:", robotId, "sensorId:", sensorId, "type:", type);
+    
+    // Ensure 'type' is a string before proceeding
+    if (typeof type !== 'string') {
+        console.error("Invalid type:", type);
+        alert("Invalid type provided.");
+        return;
+    }
+
+    const data = getRobotInputs(robotId, sensorId, type);
 
     // Validate temperature and humidity fields
     if (!data.min_temp || !data.max_temp || !data.min_humidity || !data.max_humidity) {
@@ -214,18 +257,20 @@ function checkAllInputs(robotId, type) {
 
     // Validate time interval and duration fields
     if (!data.time_interval || !data.duration) {
-        alert("Please fill in both interval and duration before setting the time.");
+        alert("Please fill in both interval and duration fields before setting the time.");
         return;
     }
 
     // Display the settings in an alert box and log to console
     alert(`Set button clicked with values:
         Min Temp = ${data.min_temp}°C, Max Temp = ${data.max_temp}°C,
-        Min Humidity = ${data.min_humidity}%, Max Humidity = ${data.max_humidity}%, 
-        Interval = ${data.time_interval} min(s), Duration = ${data.duration} min(s)`);
+        Min Humidity = ${data.min_humidity}%, Max Humidity = ${data.max_humidity}%,
+        Interval = ${data.time_interval} seconds, Duration = ${data.duration} seconds`);
 
     console.log('Robot Settings:', data);
 }
+
+
 
 
 // Function to load and display robot IDs along with sensor data (temperature and humidity)

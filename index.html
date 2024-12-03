@@ -134,118 +134,46 @@
                     <th>Set Max Temperature</th>
                     <th>Set Min Humididty</th>
                     <th>Set Max Humididty</th>
-                    <th>Control Mode</th>
                     <th>Time operation Conditions</th>
                     <th>Humidity Variation</th>
                     <th>Temperature Variation</th>
                     <th>Auto Duration</th>
+                    <th>Set</th>
                 </tr>
                 <tr>
                     <td>1</td>
-                    <td><input type="number" id="mixer_min_temp_1" placeholder="15" min="0" max="100"></td>
-                    <td><input type="number" id="mixer_max_temp_1" placeholder="30" min="0" max="100"></td>
-                    <td><input type="number" id="mixer_min_humidity_1" placeholder="40" min="0" max="100"></td>
-                    <td><input type="number" id="mixer_max_humidity_1" placeholder="70" min="0" max="100"></td>
+                    <td><input type="number" id="mixer_min_temp_1_1" placeholder="15" min="0" max="100"></td>
+                    <td><input type="number" id="mixer_max_temp_1_1" placeholder="30" min="0" max="100"></td>
+                    <td><input type="number" id="mixer_min_humidity_1_1" placeholder="40" min="0" max="100"></td>
+                    <td><input type="number" id="mixer_max_humidity_1_1" placeholder="70" min="0" max="100"></td>
                     <td>
-                        <button onclick="checkAllInputs(1, 'Mixer')">Set</button>
+                        Every:
+                        <input type="number" id="mixer_interval_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
+                        <input type="number" id="mixer_interval_min_1_1" placeholder="MM" min="0" max="59"> min(s)
+                        <input type="number" id="mixer_interval_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)<br><br>
+                        Will move for:
+                        <input type="number" id="mixer_duration_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
+                        <input type="number" id="mixer_duration_min_1_1" placeholder="MM" min="0" max="59"> min(s)
+                        <input type="number" id="mixer_duration_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
                     </td>
                     <td>
-                        every <input type="number" id="mixer_interval_1" placeholder="10" min="1" max="60"> min(s)<br>
-                        will move for <input type="number" id="mixer_duration_1" placeholder="5" min="1" max="60">min(s)
-                    </td>
-                    <td>08:00</td>
-                    <td>18:00</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                    <td>
-                        <div class="control-buttons">
-                            <button onclick="checkAllInputs(2)">Set</button>
-                        </div>
+                        <input type="number" id="mixer_humd_var_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
+                        <input type="number" id="mixer_humd_var_min_1_1" placeholder="MM" min="0" max="59"> min(s)
+                        <input type="number" id="mixer_humd_var_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
                     </td>
                     <td>
-                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                    </td>
-                    <td>08:00</td>
-                    <td>18:00</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                    <td>
-                        <div class="control-buttons">
-                            <button onclick="checkAllInputs(3)">Set</button>
-                        </div>
+                        <input type="number" id="mixer_temp_var_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
+                        <input type="number" id="mixer_temp_var_min_1_1" placeholder="MM" min="0" max="59"> min(s)
+                        <input type="number" id="mixer_temp_var_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
                     </td>
                     <td>
-                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                    </td>
-                    <td>08:00</td>
-                    <td>18:00</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                    <td>
-                        <div class="control-buttons">
-                            <button onclick="checkAllInputs(4)">Set</button>
-                        </div>
+                        <input type="number" id="mixer_auto_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
+                        <input type="number" id="mixer_auto_min_1_1" placeholder="MM" min="0" max="59"> min(s)
+                        <input type="number" id="mixer_auto_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
                     </td>
                     <td>
-                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
+                        <button onclick="checkAllInputs(1,1, 'Mixer')">Set</button>
                     </td>
-                    <td>08:00</td>
-                    <td>18:00</td>
-                </tr>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                    <td>
-                        <div class="control-buttons">
-                            <button onclick="checkAllInputs(5)">Set</button>
-                        </div>
-                    </td>
-                    <td>
-                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                    </td>
-                    <td>08:00</td>
-                    <td>18:00</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td><input type="number" id="minTemp1" placeholder="15" min="0" max="100">°C</td>
-                    <td><input type="number" id="maxTemp1" placeholder="30" min="0" max="100">°C</td>
-                    <td><input type="number" id="minHumidity1" placeholder="40" min="0" max="100">%</td>
-                    <td><input type="number" id="maxHumidity1" placeholder="70" min="0" max="100">%</td>
-                    <td>
-                        <div class="control-buttons">
-                            <button onclick="checkAllInputs(6)">Set</button>
-                        </div>
-                    </td>
-                    <td>
-                        every <input type="number" id="interval1" placeholder="10" min="1"> min(s)<br>
-                        will move for <input type="number" id="duration1" placeholder="5" min="1"> min(s)
-                    </td>
-                    <td>08:00</td>
-                    <td>18:00</td>
                 </tr>
             </table>
         </div>
