@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const mqtt = require('mqtt');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 const app = express();
 
 // Enable CORS for specific IP address (127.0.0.1) / 特定の IP アドレス (127.0.0.1) に対して CORS を有効にする
@@ -56,30 +57,38 @@ app.get('/sendMode', (req, res) => {
   });
 });
 
-app.get('/SendThres', (req, res) => {
-  // Extract query parameters
-  const { robotID, sensorID, type } = req.query;
+// Use middleware to parse JSON body
+app.use(bodyParser.json());
 
-  // Validate inputs
-  if (!robotID || !sensorID || !type) {
-    return res.status(400).send({ error: 'robotID, sensorID, and type are required parameters' });
+// Define your POST route
+app.post('/SendThres', (req, res) => {
+  // Get the data sent from the front-end
+  const { robotId, sensorId, type } = req.body;
+
+  // Validate the inputs (check if robotId, sensorId, and type exist)
+  if (!robotId || !sensorId || !type || !type.min_temp || !type.max_temp || !type.min_humidity || !type.max_humidity || !type.time_interval || !type.duration || !type.humid_var || !type.temp_var || !type.auto_duration) {
+    return res.status(400).send({ error: 'All fields are required' });
   }
 
-  // Generate the threshold JSON using your custom function
-  const thresjson = checkAllInputs(robotID, sensorID, type);
+  // Log the received threshold data
+  console.log('Received threshold data:', type);
 
-  // Define the MQTT topic dynamically
-  const topic = `GPBL2425/${robotID}/${sensorID}/Motor/threshold`;
+  // Create MQTT topic using robotId and sensorId
+  const topic = `GPBL2425/${robotId}/${sensorId}/Motor/threshold`;
 
-  // Publish the JSON data to the MQTT topic
-  client.publish(topic, JSON.stringify(thresjson), { qos: 1 }, (err) => {
+  // Prepare the data to be published to MQTT
+  const thresholdData = JSON.stringify(type);
+
+  // Publish to MQTT (assuming you have an MQTT client)
+  client.publish(topic, thresholdData, { qos: 1 }, (err) => {
     if (err) {
       console.error('Failed to publish JSON data:', err);
       return res.status(500).send('Failed to send MQTT message');
     }
+    console.log(`JSON data published successfully to topic "${topic}":`, thresholdData);
 
-    console.log(`JSON data published successfully to topic "${topic}":`, thresjson);
-    res.send(`Message sent to topic "${topic}": ${JSON.stringify(thresjson)}`);
+    // Send a success response
+    res.send({ message: `Message sent to topic "${topic}": ${thresholdData}` });
   });
 });
 

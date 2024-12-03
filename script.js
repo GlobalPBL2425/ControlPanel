@@ -28,15 +28,13 @@ function loadHumidityData(robotId ,sensorId) {
     fetchFunctionData(robotId, sensorId,'humidity', 'MAX','maxHumd');
     fetchFunctionData(robotId, sensorId,'humidity', 'MIN','minHumd');
     fetchFunctionData(robotId, sensorId ,'humidity', 'AVG','avgHumd');
-
-
-    
 }
 
 // Periodically update data for each robot / 各ロボットのデータを定期的に更新する
 function autoUpdateData() {
     const xhr = new XMLHttpRequest();
     const compostTable = document.getElementById("compostTable");
+    const mixerTable = document.getElementById("mixerTable");
 
     // Fetch robot IDs
     xhr.open("GET", `http://localhost:3000/getRobotId`, true);
@@ -44,7 +42,7 @@ function autoUpdateData() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const robotIds = JSON.parse(xhr.responseText);
 
-            // Iterate through each robot ID
+            // Outer loop for each robot ID
             robotIds.forEach(function (robot) {
                 const robotId = robot.robotId;
 
@@ -55,14 +53,11 @@ function autoUpdateData() {
                     if (xhr2.readyState === 4 && xhr2.status === 200) {
                         const sensorIds = JSON.parse(xhr2.responseText);
 
-                        // Log the sensor IDs or process them further
-                        //console.log(`Robot ID: ${robotId}, Sensor IDs:`, sensorIds);
-
-                        // Example: Iterate through sensor IDs and load data
+                        // Inner loop for each sensor ID
                         sensorIds.forEach(function (sensor) {
                             const sensorId = sensor.sensorId;
-                            loadTemperatureData(robotId, sensorId);
-                            loadHumidityData(robotId, sensorId);
+
+                            
                         });
                     }
                 };
@@ -72,11 +67,119 @@ function autoUpdateData() {
     };
     xhr.send();
 }
+
 // Load data when the page is loaded and set up periodic updates / ページのロード時にデータをロードし、定期的な更新を設定します
 window.onload = function () {
     loadRobotIds();
     setInterval(autoUpdateData, 3000); // Update data every 3 seconds / 3秒ごとにデータを更新
 };
+
+// Function to load both Robot ID and Sensor ID once
+function loadRobotAndSensorIdsOnce() {
+    const xhr = new XMLHttpRequest();
+
+    // Fetch robot IDs
+    xhr.open("GET", `http://localhost:3000/getRobotId`, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const robotIds = JSON.parse(xhr.responseText);
+
+            // Loop through each robot ID
+            robotIds.forEach(function (robot) {
+                const robotId = robot.robotId;
+
+                // Fetch sensor IDs for each robot
+                loadSensorIdsForRobot(robotId);
+            });
+        }
+    };
+    xhr.send();
+}
+
+// Function to load sensor IDs for each robot
+function loadSensorIdsForRobot(robotId) {
+    const xhr2 = new XMLHttpRequest();
+    xhr2.open("GET", `http://localhost:3000/getSensorID?robotId=${robotId}`, true);
+    xhr2.onreadystatechange = function () {
+        if (xhr2.readyState === 4 && xhr2.status === 200) {
+            const sensorIds = JSON.parse(xhr2.responseText);
+
+            // Loop through each sensor ID and process them
+            sensorIds.forEach(function (sensor) {
+                const sensorId = sensor.sensorId;
+
+                // Here, you can process the sensor data or update the table as needed
+                console.log(`Robot ID: ${robotId}, Sensor ID: ${sensorId}`);
+
+                // For example, update the mixer table for this robot and sensor
+                updateMixerTable(robotId, sensorId);
+            });
+        }
+    };
+    xhr2.send();
+}
+
+// Function to update the mixer table (add rows or update existing rows)
+function updateMixerTable(robotId, sensorId) {
+    const table = document.getElementById("mixerTable");
+    
+    // Check if a row for this robot and sensor already exists
+    let rowExists = false;
+    const rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) { // Skipping the header row
+        const cells = rows[i].getElementsByTagName("td");
+        
+        if (cells[0].textContent === robotId && cells[1].textContent === sensorId) {
+            rowExists = true;
+            break;
+        }
+    }
+
+    // If row doesn't exist, add a new row to the table
+    if (!rowExists) {
+        const newRow = table.insertRow();
+        newRow.innerHTML = `
+            <td>${robotId}</td>
+            <td>${sensorId}</td>
+            <td><input type="number" id="mixer_min_temp_${robotId}_${sensorId}" placeholder="15" min="0" max="100"></td>
+            <td><input type="number" id="mixer_max_temp_${robotId}_${sensorId}" placeholder="30" min="0" max="100"></td>
+            <td><input type="number" id="mixer_min_humidity_${robotId}_${sensorId}" placeholder="40" min="0" max="100"></td>
+            <td><input type="number" id="mixer_max_humidity_${robotId}_${sensorId}" placeholder="70" min="0" max="100"></td>
+            <td>
+                Every:
+                <input type="number" id="mixer_interval_hour_${robotId}_${sensorId}" placeholder="HH" min="0" max="23"> hour(s)
+                <input type="number" id="mixer_interval_min_${robotId}_${sensorId}" placeholder="MM" min="0" max="59"> min(s)
+                <input type="number" id="mixer_interval_sec_${robotId}_${sensorId}" placeholder="SS" min="0" max="59"> sec(s) <br><br>
+                Will move for:
+                <input type="number" id="mixer_duration_hour_${robotId}_${sensorId}" placeholder="HH" min="0" max="23"> hour(s)
+                <input type="number" id="mixer_duration_min_${robotId}_${sensorId}" placeholder="MM" min="0" max="59"> min(s)
+                <input type="number" id="mixer_duration_sec_${robotId}_${sensorId}" placeholder="SS" min="0" max="59"> sec(s)
+            </td>
+            <td>
+                <input type="number" id="mixer_humd_var_hour_${robotId}_${sensorId}" placeholder="HH" min="0" max="23"> hour(s)
+                <input type="number" id="mixer_humd_var_min_${robotId}_${sensorId}" placeholder="MM" min="0" max="59"> min(s)
+                <input type="number" id="mixer_humd_var_sec_${robotId}_${sensorId}" placeholder="SS" min="0" max="59"> sec(s)
+            </td>
+            <td>
+                <input type="number" id="mixer_temp_var_hour_${robotId}_${sensorId}" placeholder="HH" min="0" max="23"> hour(s)
+                <input type="number" id="mixer_temp_var_min_${robotId}_${sensorId}" placeholder="MM" min="0" max="59"> min(s)
+                <input type="number" id="mixer_temp_var_sec_${robotId}_${sensorId}" placeholder="SS" min="0" max="59"> sec(s)
+            </td>
+            <td>
+                <input type="number" id="mixer_auto_hour_${robotId}_${sensorId}" placeholder="HH" min="0" max="23"> hour(s)
+                <input type="number" id="mixer_auto_min_${robotId}_${sensorId}" placeholder="MM" min="0" max="59"> min(s)
+                <input type="number" id="mixer_auto_sec_${robotId}_${sensorId}" placeholder="SS" min="0" max="59"> sec(s)
+            </td>
+            <td>
+                <button onclick="checkAllInputs('${robotId}', '${sensorId}', 'Mixer')">Set</button>
+            </td>
+        `;
+    }
+}
+
+// Call the function to fetch robot and sensor IDs once
+loadRobotAndSensorIdsOnce();
 
 function fetchSensorData() {
     const selectedFilter = document.getElementById("filterRpi").value;
@@ -244,7 +347,7 @@ function checkAllInputs(robotId, sensorId, type) {
     if (typeof type !== 'string') {
         console.error("Invalid type:", type);
         alert("Invalid type provided.");
-        return;
+        return{};
     }
 
     const data = getRobotInputs(robotId, sensorId, type);
@@ -252,26 +355,58 @@ function checkAllInputs(robotId, sensorId, type) {
     // Validate temperature and humidity fields
     if (!data.min_temp || !data.max_temp || !data.min_humidity || !data.max_humidity) {
         alert("Please fill in all temperature and humidity fields before setting.");
-        return;
+        return{};
     }
 
     // Validate time interval and duration fields
     if (!data.time_interval || !data.duration) {
         alert("Please fill in both interval and duration fields before setting the time.");
-        return;
+        return{};
     }
 
     // Display the settings in an alert box and log to console
     alert(`Set button clicked with values:
         Min Temp = ${data.min_temp}°C, Max Temp = ${data.max_temp}°C,
         Min Humidity = ${data.min_humidity}%, Max Humidity = ${data.max_humidity}%,
-        Interval = ${data.time_interval} seconds, Duration = ${data.duration} seconds`);
+        Interval = ${data.time_interval} seconds, Duration = ${data.duration} seconds , Humidity Var = ${data.humid_var} seconds , Temperature Var = ${data.temp_var},Auto duration =${data.auto_duration}`);
 
-    console.log('Robot Settings:', data);
+    //console.log('Robot Settings:', data);
+    sendToBackend(robotId, sensorId, data) 
+    
+    return data;
 }
 
+// Example of sending the data from the front-end to the backend using fetch
+function sendToBackend(robotId, sensorId, type) {
+    // Send the threshold data directly
+    const thresholdData = {
+        robotId: robotId,      // Corrected: use robotId only once
+        sensorId: sensorId,    // Fixed: correct key for sensorId
+        type: type             // Assuming type is already a JSON object, it will be sent as is
+    };
+    console.log(JSON.stringify(thresholdData)   )
+    // If the data is empty, don't proceed
+    if (Object.keys(thresholdData).length === 0) {
+        console.log("No valid data to send");
+        return;
+    }
 
-
+    // Send data to backend using POST request
+    fetch('http://localhost:3000/SendThres', {
+        method: 'POST',                         // Changed to 'POST' as per backend
+        headers: {
+            'Content-Type': 'application/json', // Ensure the content type is JSON
+        },
+        body: JSON.stringify(thresholdData)     // Send the data directly
+    })
+    .then(response => response.json())          // Parse the JSON response
+    .then(data => {
+        console.log('Success:', data);          // Log success data
+    })
+    .catch((error) => {
+        console.error('Error:', error);         // Log error
+    });
+}
 
 // Function to load and display robot IDs along with sensor data (temperature and humidity)
 function loadRobotIds() {
@@ -384,3 +519,4 @@ setInterval(function () {
 window.onload = function () {
     loadRobotIds();
 };
+

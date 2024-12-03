@@ -123,13 +123,14 @@
         <p>Conditions</p>
         <div class="tabs">
             <button class="tab active" onclick="toggleTab(event, 'Mixer')">Mixer</button>
-            <button class="tab" onclick="toggleTab(event, 'Heater')">Heater</button>
+            <button class="tab" onclick="toggleTab(event, 'Heater')">Auto to timer</button>
         </div>
 
         <div id="Mixer" class="tabcontent" style="display: none;">
-            <table>
+            <table id="mixerTable">
                 <tr>
                     <th>Robot ID (Mixer)</th>
+                    <th>Sensor ID (Mixer)</th>
                     <th>Set Min Temperature </th>
                     <th>Set Max Temperature</th>
                     <th>Set Min Humididty</th>
@@ -140,41 +141,87 @@
                     <th>Auto Duration</th>
                     <th>Set</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td><input type="number" id="mixer_min_temp_1_1" placeholder="15" min="0" max="100"></td>
-                    <td><input type="number" id="mixer_max_temp_1_1" placeholder="30" min="0" max="100"></td>
-                    <td><input type="number" id="mixer_min_humidity_1_1" placeholder="40" min="0" max="100"></td>
-                    <td><input type="number" id="mixer_max_humidity_1_1" placeholder="70" min="0" max="100"></td>
-                    <td>
-                        Every:
-                        <input type="number" id="mixer_interval_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
-                        <input type="number" id="mixer_interval_min_1_1" placeholder="MM" min="0" max="59"> min(s)
-                        <input type="number" id="mixer_interval_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)<br><br>
-                        Will move for:
-                        <input type="number" id="mixer_duration_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
-                        <input type="number" id="mixer_duration_min_1_1" placeholder="MM" min="0" max="59"> min(s)
-                        <input type="number" id="mixer_duration_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
-                    </td>
-                    <td>
-                        <input type="number" id="mixer_humd_var_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
-                        <input type="number" id="mixer_humd_var_min_1_1" placeholder="MM" min="0" max="59"> min(s)
-                        <input type="number" id="mixer_humd_var_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
-                    </td>
-                    <td>
-                        <input type="number" id="mixer_temp_var_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
-                        <input type="number" id="mixer_temp_var_min_1_1" placeholder="MM" min="0" max="59"> min(s)
-                        <input type="number" id="mixer_temp_var_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
-                    </td>
-                    <td>
-                        <input type="number" id="mixer_auto_hour_1_1" placeholder="HH" min="0" max="23"> hour(s)
-                        <input type="number" id="mixer_auto_min_1_1" placeholder="MM" min="0" max="59"> min(s)
-                        <input type="number" id="mixer_auto_sec_1_1" placeholder="SS" min="0" max="59"> sec(s)
-                    </td>
-                    <td>
-                        <button onclick="checkAllInputs(1,1, 'Mixer')">Set</button>
-                    </td>
-                </tr>
+            </table>
+        </div>
+
+        
+        <div id="Heater" class="tabcontent" style="display: none;">
+            <table id="heaterTable">
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <style>
+
+                   /* Wrapper to center the switch without affecting the rest of the layout */
+                    .switch-container {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100px; /* Adjust as needed for your layout */
+                    }
+
+                    /* The switch - the box around the slider */
+                    .switch {
+                        position: relative;
+                        display: inline-block;
+                        width: 100px; /* Increased width */
+                        height: 50px; /* Increased height */
+                    }
+
+                    /* Hide default HTML checkbox */
+                    .switch input {
+                        opacity: 0;
+                        width: 0;
+                        height: 0;
+                    }
+
+                    /* The slider */
+                    .slider {
+                        position: absolute;
+                        cursor: pointer;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: #ccc;
+                        -webkit-transition: .4s;
+                        transition: .4s;
+                        border-radius: 50px;
+                    }
+
+                    .slider:before {
+                        position: absolute;
+                        content: "";
+                        height: 40px; /* Adjusted for larger size */
+                        width: 40px; /* Adjusted for larger size */
+                        left: 5px;
+                        bottom: 5px;
+                        background-color: white;
+                        -webkit-transition: .4s;
+                        transition: .4s;
+                        border-radius: 50%;
+                    }
+
+                    input:checked + .slider {
+                        background-color: #2196F3;
+                    }
+
+                    input:focus + .slider {
+                        box-shadow: 0 0 2px #2196F3;
+                    }
+
+                    input:checked + .slider:before {
+                        -webkit-transform: translateX(50px); /* Adjusted for new width */
+                        -ms-transform: translateX(50px);
+                        transform: translateX(50px);
+                    }
+
+                </style>
+                    
             </table>
         </div>
     </div>
