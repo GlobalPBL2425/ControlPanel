@@ -193,7 +193,7 @@ function fetchSensorData() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const sensorData = JSON.parse(xhr.responseText);
-            // console.log("API Response:", sensorData); // Debugging
+            //console.log("API Response:", sensorData); // Debugging
 
             const table = document.getElementById("sensorTable");
             table.innerHTML = `
@@ -204,7 +204,7 @@ function fetchSensorData() {
                     <th>Temperature</th>
                     <th>Humidity</th>
                     <th>Control Mode</th>
-                    <th>Motor Duty Cycle</th>
+                    <th>Motor Interval</th>
                 </tr>
             `;
 
@@ -222,6 +222,7 @@ function fetchSensorData() {
 
             filteredData.forEach(function (row) {
                 const tr = document.createElement("tr");
+                //console.log(row)
                 tr.innerHTML = `
                     <td>${row.robotId}</td>
                     <td>${row.sensorId}</td>
@@ -229,7 +230,7 @@ function fetchSensorData() {
                     <td>${row.temperature}</td>
                     <td>${row.humidity}</td>
                     <td>${row.controlMode}</td>
-                    <td>${row.motorDutyCycle}</td>
+                    <td>${row.motorInterval}</td>
                 `;
                 table.appendChild(tr);
             });
@@ -473,14 +474,16 @@ function createSensorRow(robotId, sensor) {
 
 // Function to load all sensor data for a specific robot and sensor
 function loadSensorData(robotId, sensorId) {
-    // Fetch current temperature and humidity
-    fetchSensorDataByType(robotId, sensorId, 'current');
-    // Fetch min, max, and average temperature and humidity
-    ['temperature', 'humidity'].forEach(function (type) {
-        ['MIN', 'MAX', 'AVG'].forEach(function (func) {
-            fetchFunctionData(robotId, sensorId, type, func);
-        });
-    });
+    loadTemperatureData(robotId ,sensorId)
+    loadHumidityData(robotId ,sensorId)
+    // // Fetch current temperature and humidity
+    // fetchSensorDataByType(robotId, sensorId, 'current');
+    // // Fetch min, max, and average temperature and humidity
+    // ['temperature', 'humidity'].forEach(function (type) {
+    //     ['MIN', 'MAX', 'AVG'].forEach(function (func) {
+    //         fetchFunctionData(robotId, sensorId, type, func);
+    //     });
+    // });
 }
 
 // Function to fetch the latest temperature or humidity data
