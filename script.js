@@ -56,7 +56,8 @@ function autoUpdateData() {
                         // Inner loop for each sensor ID
                         sensorIds.forEach(function (sensor) {
                             const sensorId = sensor.sensorId;
-
+                            loadTemperatureData(robotId ,sensorId)
+                            loadHumidityData(robotId ,sensorId)
                             
                         });
                     }
@@ -109,7 +110,7 @@ function loadSensorIdsForRobot(robotId) {
                 const sensorId = sensor.sensorId;
 
                 // Here, you can process the sensor data or update the table as needed
-                console.log(`Robot ID: ${robotId}, Sensor ID: ${sensorId}`);
+                //console.log(`Robot ID: ${robotId}, Sensor ID: ${sensorId}`);
 
                 // For example, update the mixer table for this robot and sensor
                 updateMixerTable(robotId, sensorId);
@@ -412,6 +413,7 @@ function sendToBackend(robotId, sensorId, type) {
 // Function to load and display robot IDs along with sensor data (temperature and humidity)
 function loadRobotIds() {
     const xhr = new XMLHttpRequest();
+    console.log("Function is running!")
     xhr.open("GET", "http://localhost:3000/getRobotId", true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -474,6 +476,7 @@ function createSensorRow(robotId, sensor) {
 
 // Function to load all sensor data for a specific robot and sensor
 function loadSensorData(robotId, sensorId) {
+
     loadTemperatureData(robotId ,sensorId)
     loadHumidityData(robotId ,sensorId)
     // // Fetch current temperature and humidity
@@ -516,7 +519,7 @@ function fetchFunctionData(robotId, sensorId, type, func, elementId) {
 // Automatically update data every 3 seconds
 setInterval(function () {
     loadRobotIds();
-}, 3000);
+}, 1000);
 
 // Initial data load when page is loaded
 window.onload = function () {
