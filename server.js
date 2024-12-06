@@ -381,7 +381,7 @@ app.get('/getAllSensorData', (req, res) => {
 
 
 // Start the server on port 3000 / ポート 3000 でサーバーを起動します
-const port = 3000;
+const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
