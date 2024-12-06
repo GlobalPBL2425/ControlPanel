@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -16,7 +18,7 @@ app.use(cors(corsOptions)); // Apply CORS middleware globally /CORS ミドルウ
 
 //MQTT PART START
 // Set up MQTT client and connect to the broker / MQTT クライアントをセットアップしてブローカーに接続する
-const mqttBrokerUrl = 'http://192.168.11.3'; // Replace with your broker's URL / ブローカーの URL に置き換えます
+const mqttBrokerUrl = process.env.MQTT_BROKER_URL; // Replace with your broker's URL / ブローカーの URL に置き換えます
 const client = mqtt.connect(mqttBrokerUrl);
 
 
@@ -98,11 +100,11 @@ app.post('/SendThres', (req, res) => {
 
 // Create a connection to MySQL to an IP address /IP アドレスへの MySQL への接続を作成する
 const db = mysql.createConnection({
-  host: '192.168.11.3',
-  user: 'root',
-  password: 'GPBL2425',
-  database: 'gpbl2425',
-  port: 3306
+  host: process.env.DB_HOST,       // Get host from .env file
+  user: process.env.DB_USER,       // Get user from .env file
+  password: process.env.DB_PASSWORD, // Get password from .env file
+  database: process.env.DB_NAME,   // Get database from .env file
+  port: process.env.DB_PORT        // Get port from .env file
 });
 
 // Connect to MySQL database / MySQLデータベースに接続する

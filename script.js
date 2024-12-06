@@ -14,7 +14,7 @@ function fetchLatestData(robotId,sensorId) {
 }
 
 
-// Fetch temperature data for a given robot / 特定のロボットの温度データを取得する
+// Fetch temperature data  for a given robot / 特定のロボットの温度データを取得する
 function loadTemperatureData(robotId ,sensorId) {
     fetchSensorDataByType(robotId, sensorId,'temperature', 'currTemp');
     fetchFunctionData(robotId, sensorId,'temperature', 'MAX' , 'maxTemp');
