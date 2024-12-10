@@ -247,46 +247,6 @@ setInterval(fetchSensorData, 5000);
 fetchSensorData();
 
 
-//Function to fetch sensordata for the auto/timer switch tab 
-// Function to fetch sensor data for the auto/timer switch tab
-
-
-// const client = mqtt.connect('mqtt://your-broker-url');
-// client.on('connect', function () {
-//     console.log('Connected to MQTT broker');
-// });
-
-// client.on('error', function (err) {
-//     console.error('MQTT connection failed:', err);
-// });
-
-// // Event delegation to handle switch changes dynamically
-// document.getElementById("heaterTable").addEventListener('change', function (event) {
-//     if (event.target && event.target.type === 'checkbox') {
-//         const sensorId = event.target.dataset.sensorId;
-//         const robotId = event.target.dataset.robotId;
-//         const status = event.target.checked ? 'on' : 'off';
-
-//         // Prepare JSON message
-//         const message = JSON.stringify({
-//             robotId: robotId,
-//             sensorId: sensorId,
-//             status: status
-//         });
-
-//         console.log('Sending message:', message);
-
-//         // Publish to MQTT (Ensure connection is established)
-//         client.publish('sensor/status', message, (err) => {
-//             if (err) {
-//                 console.error('Failed to send message:', err);
-//             } else {
-//                 console.log('Message sent:', message);
-//             }
-//         });
-//     }
-// });
-
 // For the other Tabs, Measure/WeatherCondition/SensorReading/Conditions 
 function openTab(evt, tabName) {
     // Hide all tabs

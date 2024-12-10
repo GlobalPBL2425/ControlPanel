@@ -160,7 +160,7 @@
             </table>
 
             <script>
-
+                //Function to fetch sensordata for the auto/timer switch tab 
                 function fetchSensorSwitches(robotId, tableBody) {
                     const sensorApiUrl = `http://localhost:3000/getSensorId?robotId=${robotId}`; // Ensure the URL is correct
 
@@ -212,7 +212,6 @@
                 const robotId = "Rpi__1"; // Example robot ID
                 const tableBody = document.querySelector("#heaterTable tbody"); // Get the table body element
                 fetchSensorSwitches(robotId, tableBody);
-
             </script>
         
             <style>
@@ -229,7 +228,6 @@
                     display: inline-block;
                     width: 100px;
                     height: 50px;
-                    background-color: #ccc; /* Debug: check if switch is visible */
                 }
 
         
@@ -276,7 +274,7 @@
                 }
         
                 input:checked + .slider:before {
-                    -webkit-transform: translateX(50px); /* Adjusted for new width */
+                    -webkit-transform: translateX(50px); 
                     -ms-transform: translateX(50px);
                     transform: translateX(50px);
                 }
