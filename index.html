@@ -144,7 +144,6 @@
             </table>
         </div>
 
-        
         <div id="Heater" class="tabcontent" style="display: none;">
             <table id="heaterTable">
                 <thead>
@@ -155,7 +154,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Sensor rows will be dynamically injected here -->
+                    <!-- Sensor rows will be dynamically inserted here -->
                 </tbody>
             </table>
 
@@ -208,10 +207,55 @@
                     xhr.send();
                 }
 
+                // Function to handle checkbox changes
+                function handleCheckboxChange(event) {
+                    const sensorId = event.target.getAttribute("data-sensor-id");
+                    const robotId = event.target.getAttribute("data-robot-id");
+                    const mode = event.target.checked ? "auto" : "timer"; // 'auto' if checked, 'timer' if unchecked
+
+                    // Send the data to the backend to trigger the MQTT message
+                    sendModeToBackend(robotId, sensorId, mode);
+                }
+
+                // Function to send the mode change data to the backend
+                function sendModeToBackend(robotId, sensorId, mode) {
+                    // Construct the data to be sent to the backend
+                    const modeData = {
+                        robotId: robotId,
+                        sensorId: sensorId,
+                        mode: mode
+                    };
+
+                    console.log("Sending data to backend:", JSON.stringify(modeData));
+
+                    // Send the data to the backend API
+                    fetch('http://localhost:3000/sendMode', {
+                        method: 'POST',  // POST method for sending data
+                        headers: {
+                            'Content-Type': 'application/json', // Ensure the backend knows we're sending JSON
+                        },
+                        body: JSON.stringify(modeData) // Send the data as JSON
+                    })
+                    .then(response => response.json())  // Handle the JSON response
+                    .then(modeData => {
+                        console.log('Response from server:', modeData);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+
                 // Example: Call the function with a specific robotId and table body reference
                 const robotId = "Rpi__1"; // Example robot ID
                 const tableBody = document.querySelector("#heaterTable tbody"); // Get the table body element
                 fetchSensorSwitches(robotId, tableBody);
+
+                // Add event listener for all the checkboxes
+                document.querySelector("#heaterTable").addEventListener("change", function(event) {
+                    if (event.target.type === "checkbox") {
+                        handleCheckboxChange(event); // Handle checkbox state change
+                    }
+                });
             </script>
         
             <style>

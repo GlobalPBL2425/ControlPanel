@@ -417,6 +417,11 @@ function sendToBackend(robotId, sensorId, type) {
     });
 }
 
+// //Function to send switch state from front end to back end
+// function sendSwitchtobackend(robotId, sensorId , checkSwitch){
+
+// }
+
 // Function to load and display robot IDs along with sensor data (temperature and humidity)
 function loadRobotIds() {
     const xhr = new XMLHttpRequest();
@@ -532,4 +537,7 @@ setInterval(function () {
 window.onload = function () {
     loadRobotIds();
 };
+
+
+
 

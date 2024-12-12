@@ -33,7 +33,7 @@ client.on('error', (err) => {
 
 // Define an endpoint to send control mode to specific robot IDs
 // 特定のロボットIDに制御モードを送信するエンドポイントを定義する
-app.get('/sendMode', (req, res) => {
+app.post('/sendMode', (req, res) => {
 
   // Extract robotID and mode parameters from the query string / クエリ文字列から robotID と mode パラメータを取得します
   const { robotID,sensorID, mode } = req.query;
