@@ -274,7 +274,7 @@ app.get('/getFunc', (req, res) => {
   const query = `
     SELECT ${func.toUpperCase()}(${type}) AS result
     FROM sensorreading 
-    WHERE robotId = ? 
+    WHERE robotId = ?
     AND sensorId = ?
   `;
 
@@ -298,6 +298,7 @@ app.get('/getFunc', (req, res) => {
     res.json(result[0].result);  // This sends the result of the aggregate function
   });
 });
+
 
 // Query to get from one timestamp to another
 // Query example ---  GET /getList?robotID=rpi_1&startime=2024-11-01T00:00:00&endtime=2024-11-30T23:59:59 

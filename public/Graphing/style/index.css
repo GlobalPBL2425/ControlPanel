@@ -1,0 +1,99 @@
+body {
+  font-family: Arial, sans-serif;
+}
+.main-header {
+  text-align: center;
+  font-size: 2.5em;
+  color: #4caf50;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+.folder {
+  width: 80%;
+  margin: 0 auto;
+  border: 2px solid #4caf50;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  position: relative;
+}
+.tabs {
+  display: flex;
+  position: relative;
+  top: -2px;
+}
+.tab {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: 2px solid #4caf50;
+  border-bottom: none;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  top: 2px;
+  border-radius: 5px 5px 0 0;
+  margin-right: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.tab:hover,
+.tab.active {
+  background-color: #45a049;
+}
+
+.tab.active {
+  z-index: 1;
+  border-bottom: 2px solid #f9f9f9;
+}
+
+.tab-content {
+  padding: 20px;
+  display: none;
+}
+
+.tab-content p {
+  margin: 0;
+}
+
+/* Center and bold the text for "Measuring Temperature and Humidity" */
+p {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Flex container to hold two tables side by side */
+.table-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table,
+th,
+td {
+  border: 1px solid #4caf50;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+/* Show first tab content by default */
+.tab-content:first-child {
+  display: block;
+}
+
+.table-container th {
+  max-width: 85px;
+}
+
