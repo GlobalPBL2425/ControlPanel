@@ -219,32 +219,28 @@
 
                 // Function to send the mode change data to the backend
                 function sendModeToBackend(robotId, sensorId, mode) {
-                    // Construct the data to be sent to the backend
-                    const modeData = {
-                        robotId: robotId,
-                        sensorId: sensorId,
-                        mode: mode
-                    };
+                    console.log(`Sending mode "${mode}" for Robot ID: ${robotId}, Sensor ID: ${sensorId}`);
 
-                    console.log("Sending data to backend:", JSON.stringify(modeData));
+                    // Use fetch with query parameters instead of JSON body
+                    const url = `http://localhost:3000/sendMode?robotID=${robotId}&sensorID=${sensorId}&mode=${mode}`;
 
-                    // Send the data to the backend API
-                    fetch('http://localhost:3000/sendMode', {
-                        method: 'POST',  // POST method for sending data
-                        headers: {
-                            'Content-Type': 'application/json', // Ensure the backend knows we're sending JSON
-                        },
-                        body: JSON.stringify(modeData) // Send the data as JSON
+                    fetch(url, {
+                        method: 'POST', // Use POST method
                     })
-                    .then(response => response.json())  // Handle the JSON response
-                    .then(modeData => {
-                        console.log('Response from server:', modeData);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text();
+                            } else {
+                                throw new Error('Failed to send mode to the backend');
+                            }
+                        })
+                        .then(message => {
+                            console.log('Response from server:', message);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
                 }
-
                 // Example: Call the function with a specific robotId and table body reference
                 const robotId = "Rpi__1"; // Example robot ID
                 const tableBody = document.querySelector("#heaterTable tbody"); // Get the table body element
