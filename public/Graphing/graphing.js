@@ -23,21 +23,21 @@ const myChart = new Chart(ctx, {
             }
         }
     }
-});
-
+}
+);
 // Function to add data points to the chart
 function addData(chart, label, data) {
     chart.data.labels.push(label);
     chart.data.datasets[0].data.push(data);
     chart.update();
-}
+};
 
 // Function to remove old data points from the chart
 function removeData(chart) {
     chart.data.labels.shift();
     chart.data.datasets[0].data.shift();
     chart.update();
-}
+};
 
 // Simulate real-time updates
 let counter = 0;
@@ -73,7 +73,7 @@ function loadRobotIds() {
         }
     };
     xhr.send();
-}
+};
 
 
 function fetchSensorID(robotId, compostTable) {
@@ -90,10 +90,12 @@ function fetchSensorID(robotId, compostTable) {
         }
     };
     xhr.send();
-}
+};
 
 window.onload = function () {
     loadRobotIds();
+    const myLineChart = createChart('myChart', 'line', ['Jan', 'Feb', 'Mar'], [10, 20, 15]);
+
 };
 setInterval(function () {
     loadRobotIds();
@@ -115,7 +117,18 @@ function createGraphRow(robotId, sensor) {
         <td id="Duration-${robotId}-${sensor.sensorId}">--</td>
     `;
     return row;
-}
+};
 
 
-function loads
+function loadGraphData(robotId ,sensorId){
+    
+};
+
+function loadPowerGauge(robotId ,sensorId)
+{
+
+};
+
+function timeSlider(){
+    
+};
