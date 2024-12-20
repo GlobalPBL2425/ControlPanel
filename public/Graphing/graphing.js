@@ -1,106 +1,67 @@
-// Set up the Chart.js chart
-const ctx = document.getElementById('myChart').getContext('2d');
-const myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Dynamic Data',
-            data: [],
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-            fill: false
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            x: {
-                beginAtZero: true
-            },
-            y: {
-                beginAtZero: true
-            }
+
+
+async function loadRobotIds(initflag) {
+    try {
+        const response = await fetch("http://localhost:3000/getRobotId");
+        if (!response.ok) throw new Error(`Failed to fetch robot IDs: ${response.status}`);
+        const robotIds = await response.json();
+
+        const compostTable = document.getElementById("compostTable");
+        compostTable.innerHTML = ""; // Clear existing rows
+
+        robotIds.sort((a, b) => {
+            if (a.robotId === "Rpi__1") return -1;
+            if (b.robotId === "Rpi__1") return 1;
+            return 0;
+        });
+
+        for (const item of robotIds) {
+            await fetchSensorID(item.robotId, compostTable, initflag);
         }
+    } catch (error) {
+        console.error("Error loading robot IDs:", error);
     }
 }
-);
-// Function to add data points to the chart
-function addData(chart, label, data) {
-    chart.data.labels.push(label);
-    chart.data.datasets[0].data.push(data);
-    chart.update();
-};
 
-// Function to remove old data points from the chart
-function removeData(chart) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
-    chart.update();
-};
+async function fetchSensorID(robotId, compostTable, initflag) {
+    try {
+        const response = await fetch(`http://localhost:3000/getSensorId?robotId=${robotId}`);
+        if (!response.ok) throw new Error(`Failed to fetch sensor IDs for ${robotId}: ${response.status}`);
+        const sensorIds = await response.json();
 
-// Simulate real-time updates
-let counter = 0;
-setInterval(() => {
-    const randomData = Math.floor(Math.random() * 100); // Generate random data
-    addData(myChart, `Point ${counter}`, randomData);   // Add new data
-    if (myChart.data.labels.length > 10) {             // Limit to 10 points
-        removeData(myChart);
+        sensorIds.forEach(sensor => {
+            if (initflag) {
+                // const storageKey = `sliderValues-${robotId}-${sensor.sensorId}`;
+                // localStorage.setItem(storageKey, 50);
+            }
+
+            const row = createGraphRow(robotId, sensor);
+            compostTable.appendChild(row);
+            loadGrouping(robotId, sensor.sensorId);
+        });
+    } catch (error) {
+        console.error(`Error fetching sensor IDs for robotId ${robotId}:`, error);
     }
-    counter++;
-}, 1000); // Update every second
+}
 
-function loadRobotIds() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://localhost:3000/getRobotId", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const robotIds = JSON.parse(xhr.responseText);
-            const compostTable = document.getElementById("compostTable");
-
-            compostTable.innerHTML = ""; // Clear existing rows
-
-            robotIds.sort(function (a, b) {
-                if (a.robotId === "Rpi__1") return -1;
-                if (b.robotId === "Rpi__1") return 1;
-                return 0;
-            });
-
-            // Loop through each robot ID
-            robotIds.forEach(function (item) {
-                fetchSensorID(item.robotId, compostTable);
-            });
-        }
-    };
-    xhr.send();
+window.onload = async function () {
+    try {
+        const initflag = true;
+        await loadRobotIds(initflag);
+        const myLineChart = createChart('myChart', 'line', ['Jan', 'Feb', 'Mar'], [10, 20, 15]);
+    } catch (error) {
+        console.error("Error during initialization:", error);
+    }
 };
 
-
-function fetchSensorID(robotId, compostTable) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", `http://localhost:3000/getSensorId?robotId=${robotId}`, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const sensorIds = JSON.parse(xhr.responseText);
-
-            sensorIds.forEach(function (sensor) {
-                const row = createGraphRow(robotId, sensor);
-                compostTable.appendChild(row);
-            });
-        }
-    };
-    xhr.send();
-};
-
-window.onload = function () {
-    loadRobotIds();
-    const myLineChart = createChart('myChart', 'line', ['Jan', 'Feb', 'Mar'], [10, 20, 15]);
-
-};
-setInterval(function () {
-    loadRobotIds();
+setInterval(async function () {
+    try {
+        const initflag = false;
+        await updateReadings(initflag);
+    } catch (error) {
+        console.error("Error updating readings:", error);
+    }
 }, 1000);
-
 
 
 
@@ -119,6 +80,9 @@ function createGraphRow(robotId, sensor) {
     return row;
 };
 
+function loadGrouping(robotId ,sensorId){
+    timeSlider(robotId, sensorId);
+};
 
 function loadGraphData(robotId ,sensorId){
     
@@ -129,6 +93,24 @@ function loadPowerGauge(robotId ,sensorId)
 
 };
 
-function timeSlider(){
-    
-};
+function timeSlider(robotId, sensorId) {
+    const storageKey = `sliderValue-${robotId}-${sensorId}`;
+    const savedValue = localStorage.getItem(storageKey) || 50;
+    document.getElementById(`Duration-${robotId}-${sensorId}`).innerHTML = `
+        <div class="slidecontainer">
+            <input 
+                type="range" 
+                min="1" 
+                max="100" 
+                value="${savedValue}" 
+                class="slider" 
+                oninput="updateSliderValue('${robotId}', '${sensorId}', this.value)"
+            >
+        </div>
+    `;
+}
+function updateSliderValue(robotId, sensorId, value) {
+    const storageKey = `sliderValue-${robotId}-${sensorId}`;
+    localStorage.setItem(storageKey, value);
+    console.log(`Saved ${value} for ${storageKey}`);
+}

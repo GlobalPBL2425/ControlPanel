@@ -24,30 +24,6 @@
 
     <canvas id="myChart" width="400" height="200"></canvas>
     <canvas id="gauge" width="300" height="300"></canvas>
-    <script>
-    var opts = {
-        angle: 0.2, // The span of the gauge arc
-        lineWidth: 0.1, // The line thickness
-        radiusScale: 1, // Relative radius
-        pointer: {
-        length: 0.6, // Relative to gauge radius
-        strokeWidth: 0.035, // The thickness
-        color: '#000000' // Fill color
-        },
-        limitMax: false, // If false, the max value of the gauge is unlimited
-        limitMin: false, // If false, the min value of the gauge is unlimited
-        colorStart: '#6FADCF', // Colors
-        colorStop: '#8FC0DA',
-        strokeColor: '#E0E0E0', // Background color
-        generateGradient: true
-    };
     
-    var target = document.getElementById('gauge'); // Get the canvas element
-    var gauge = new Gauge(target).setOptions(opts); // Create the gauge
-    gauge.maxValue = 3000; // Set max value
-    gauge.setMinValue(0);  // Set min value
-    gauge.animationSpeed = 32; // Set animation speed (32ms refresh)
-    gauge.set(1500); // Set value
-    </script>
 </body>
 </html>
