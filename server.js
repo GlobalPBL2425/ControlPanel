@@ -379,7 +379,46 @@ app.get('/getAllSensorData', (req, res) => {
   });
 });
 
+// Endpoint to fetch graph data for a specific robot and sensor within a given time duration
+//http://localhost:3000/getGraph?robotID=Rpi_1&sensorId=sensor_1&type=temperature&duration=5
+app.get('/getGraph', (req, res) => {
+  const { robotID, sensorId, type, duration } = req.query;
 
+  // Validate inputs
+  const allowedTypes = ['temperature', 'humidity'];
+  if (!allowedTypes.includes(type)) {
+      return res.status(400).json({ error: 'Invalid type parameter' });
+  }
+  if (!robotID || !sensorId || !duration) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+  }
+
+  // Calculate start time and end time
+  const now = new Date();
+  const starttime = new Date(now); // Create a new Date object to avoid modifying `now`
+  starttime.setHours(starttime.getHours() - parseInt(duration, 10));
+  const endtime = now.toISOString();
+  const starttimeFormatted = starttime.toISOString();
+
+  // SQL query with parameterized inputs
+  const query = `
+    SELECT ${type} 
+    FROM sensorreading
+    WHERE robotId = ? 
+      AND sensorId = ? 
+      AND timestamp BETWEEN ? AND ?`;
+
+  // Database query execution (example assumes you're using MySQL)
+  db.query(query, [robotID, sensorId, starttimeFormatted, endtime], (err, results) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          return res.status(500).json({ error: 'Database query failed' });
+      }
+
+      // Send results back to the client
+      res.json(results);
+  });
+});
 
 // Start the server on port 3000 / ポート 3000 でサーバーを起動します
 const port = process.env.PORT;
