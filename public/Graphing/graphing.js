@@ -31,12 +31,17 @@ async function fetchSensorID(robotId, compostTable, initflag) {
 
         sensorIds.forEach(sensor => {
             if (initflag) {
+                const row = createGraphRow(robotId, sensor);
+                compostTable.appendChild(row);
+                InitGraphData(robotId, sensor.sensorId, 'temperature')
+                InitGraphData(robotId, sensor.sensorId, 'humidity');
+
+                
                 // const storageKey = `sliderValues-${robotId}-${sensor.sensorId}`;
                 // localStorage.setItem(storageKey, 50);
             }
 
-            const row = createGraphRow(robotId, sensor);
-            compostTable.appendChild(row);
+            
             loadGrouping(robotId, sensor.sensorId);
         });
     } catch (error) {
@@ -48,7 +53,7 @@ window.onload = async function () {
     try {
         const initflag = true;
         await loadRobotIds(initflag);
-        const myLineChart = createChart('myChart', 'line', ['Jan', 'Feb', 'Mar'], [10, 20, 15]);
+        // const myLineChart = createChart('myChart', 'line', ['Jan', 'Feb', 'Mar'], [10, 20, 15]);
     } catch (error) {
         console.error("Error during initialization:", error);
     }
@@ -83,23 +88,81 @@ function createGraphRow(robotId, sensor) {
         <td id="PowerUsage-${robotId}-${sensor.sensorId}">--</td>
         <td id="Duration-${robotId}-${sensor.sensorId}">--</td>
     `;
+    
     return row;
+
 };
 
 function loadGrouping(robotId ,sensorId){
     timeSlider(robotId, sensorId);
-    loadGraphData(robotId ,sensorId,temperature)
-    loadGraphData(robotId ,sensorId,humidity)
+    loadGraphData(robotId ,sensorId,'temperature')
+    loadGraphData(robotId ,sensorId,'humidity')
 };
 
-function loadGraphData(robotId ,sensorId,type){
+function InitGraphData(robotId, sensorId, type) {
+    // Construct the element ID
+    const elementId = `${type}-${robotId}-${sensorId}`;
+    const targetElement = document.getElementById(elementId);
 
-    
-    document.getElementById(`${type}-${robotId}-${sensorId}`).innerHTML = `
-        <div> aaaaaa </div>
+    // Check if the target element exists
+    if (!targetElement) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
+
+    // Dynamically update the element with graph data
+    targetElement.innerHTML = `
+        <div>
+            <canvas id="chart-${elementId}" width="150" height="75"></canvas>
+        </div>
     `;
     
-};
+}
+
+
+function loadGraphData(robotId, sensorId, type) {
+    const elementId = `${type}-${robotId}-${sensorId}`;
+    const chartId = `chart-${elementId}`;
+    const canvas = document.getElementById(chartId);
+
+    if (!canvas) {
+        console.error(`Canvas with ID "${chartId}" not found.`);
+        return;
+    }
+
+    // Get the context for Chart.js
+    const ctx = canvas.getContext('2d');
+
+    // Create a placeholder graph
+    const placeholderChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Loading...'],
+            datasets: [{
+                label: `${type} Data`,
+                data: [0], // Placeholder value
+                backgroundColor: 'rgba(192, 192, 192, 0.2)',
+                borderColor: 'rgba(192, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+
+    // Simulate loading data with a timeout
+    setTimeout(() => {
+        // Update the chart with real data after 2 seconds
+        placeholderChart.data.labels = ['1', '2', '3', '4', '5'];
+        placeholderChart.data.datasets[0].data = [10, 20, 30, 40, 50];
+        placeholderChart.update();
+    }, 100);
+}
 
 function loadPowerGauge(robotId ,sensorId)
 {
