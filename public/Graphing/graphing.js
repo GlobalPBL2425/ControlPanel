@@ -64,6 +64,12 @@ setInterval(async function () {
 }, 1000);
 
 
+async function updateReadings(initflag) {
+    // Your code to update readings
+    console.log("Readings updated with initflag:", initflag);
+}
+
+
 
 
 function createGraphRow(robotId, sensor) {
@@ -72,8 +78,8 @@ function createGraphRow(robotId, sensor) {
     row.innerHTML = `
         <td>${robotId}</td>
         <td>${sensor.sensorId}</td>
-        <td id="Temp-${robotId}-${sensor.sensorId}">--</td>
-        <td id="Humd-${robotId}-${sensor.sensorId}">--</td>
+        <td id="temperature-${robotId}-${sensor.sensorId}">--</td>
+        <td id="humidity-${robotId}-${sensor.sensorId}">--</td>
         <td id="PowerUsage-${robotId}-${sensor.sensorId}">--</td>
         <td id="Duration-${robotId}-${sensor.sensorId}">--</td>
     `;
@@ -82,9 +88,16 @@ function createGraphRow(robotId, sensor) {
 
 function loadGrouping(robotId ,sensorId){
     timeSlider(robotId, sensorId);
+    loadGraphData(robotId ,sensorId,temperature)
+    loadGraphData(robotId ,sensorId,humidity)
 };
 
-function loadGraphData(robotId ,sensorId){
+function loadGraphData(robotId ,sensorId,type){
+
+    
+    document.getElementById(`${type}-${robotId}-${sensorId}`).innerHTML = `
+        <div> aaaaaa </div>
+    `;
     
 };
 
@@ -108,6 +121,7 @@ function timeSlider(robotId, sensorId) {
             >
         </div>
     `;
+    
 }
 function updateSliderValue(robotId, sensorId, value) {
     const storageKey = `sliderValue-${robotId}-${sensorId}`;
