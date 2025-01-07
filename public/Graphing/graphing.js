@@ -70,7 +70,7 @@ setInterval(async function () {
 
 
 async function updateReadings(initflag) {
-    // Your code to update readings
+    
     console.log("Readings updated with initflag:", initflag);
 }
 
@@ -113,7 +113,7 @@ function InitGraphData(robotId, sensorId, type) {
     // Dynamically update the element with graph data
     targetElement.innerHTML = `
         <div>
-            <canvas id="chart-${elementId}" width="150" height="75"></canvas>
+            <canvas id="chart-${elementId}" width="200" height="100"></canvas>
         </div>
     `;
     
@@ -121,48 +121,110 @@ function InitGraphData(robotId, sensorId, type) {
 
 
 function loadGraphData(robotId, sensorId, type) {
+
+    const storageKey = `sliderValue-${robotId}-${sensorId}`;
+    const savedValue = localStorage.getItem(storageKey) || 50;
+
     const elementId = `${type}-${robotId}-${sensorId}`;
     const chartId = `chart-${elementId}`;
     const canvas = document.getElementById(chartId);
 
-    if (!canvas) {
-        console.error(`Canvas with ID "${chartId}" not found.`);
-        return;
-    }
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `http://localhost:3000/getGraph?robotID=${robotId}&sensorId=${sensorId}&type=${type}&duration=${savedValue}`, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+            const ctx = canvas.getContext('2d');
+            const labels =  data.map(entry => {
+                const adjustedDate = new Date(entry.timestamp);
+                adjustedDate.setHours(adjustedDate.getHours() + 9);
+                return adjustedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            });
 
-    // Get the context for Chart.js
-    const ctx = canvas.getContext('2d');
+            if (type == 'temperature'){
+                const graphvalue = data.map(entry => entry.temperature);
+                tempGraph(graphvalue , labels ,ctx);
+            }else{
+                const graphvalue = data.map(entry => entry.humidity);
+                humdGraph(graphvalue, labels , ctx);
+            }
+           
+            
+        }
+    };
+    xhr.send();
 
-    // Create a placeholder graph
-    const placeholderChart = new Chart(ctx, {
+};
+
+function tempGraph(temperatures, labels , ctx){
+    new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Loading...'],
-            datasets: [{
-                label: `${type} Data`,
-                data: [0], // Placeholder value
-                backgroundColor: 'rgba(192, 192, 192, 0.2)',
-                borderColor: 'rgba(192, 192, 192, 1)',
-                borderWidth: 1
-            }]
+          labels: labels,
+          datasets: [{
+            label: 'Temperature (°C)',
+            data: temperatures,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderWidth: 2,
+            tension: 0.3
+          }]
         },
         options: {
-            scales: {
-                y: {
-                    beginAtZero: false
-                }
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Time'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Temperature (°C)'
+              }
             }
+          }
         }
-    });
+      });
 
-    // Simulate loading data with a timeout
-    setTimeout(() => {
-        // Update the chart with real data after 2 seconds
-        placeholderChart.data.labels = ['1', '2', '3', '4', '5'];
-        placeholderChart.data.datasets[0].data = [10, 20, 30, 40, 50];
-        placeholderChart.update();
-    }, 100);
-}
+};
+
+function humdGraph(humidities, labels , ctx){
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Humidity (%)',
+            data: humidities,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderWidth: 2,
+            tension: 0.3
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Time'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Humidity (%)'
+              }
+            }
+          }
+        }
+      });
+
+};
+
+
 
 function loadPowerGauge(robotId ,sensorId)
 {

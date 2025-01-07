@@ -380,7 +380,7 @@ app.get('/getAllSensorData', (req, res) => {
 });
 
 // Endpoint to fetch graph data for a specific robot and sensor within a given time duration
-//http://localhost:3000/getGraph?robotID=Rpi_1&sensorId=sensor_1&type=temperature&duration=5
+//http://localhost:3000/getGraph?robotID=Rpi__1&sensorId=sensor__1&type=temperature&duration=5
 app.get('/getGraph', (req, res) => {
   const { robotID, sensorId, type, duration } = req.query;
 
@@ -395,14 +395,14 @@ app.get('/getGraph', (req, res) => {
 
   // Calculate start time and end time
   const now = new Date();
-  const starttime = new Date(now); // Create a new Date object to avoid modifying `now`
+  const starttime = new Date(); // Create a new Date object to avoid modifying `now`
   starttime.setHours(starttime.getHours() - parseInt(duration, 10));
   const endtime = now.toISOString();
   const starttimeFormatted = starttime.toISOString();
 
   // SQL query with parameterized inputs
   const query = `
-    SELECT ${type} 
+    SELECT timestamp, ${type} 
     FROM sensorreading
     WHERE robotId = ? 
       AND sensorId = ? 
