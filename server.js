@@ -394,11 +394,18 @@ app.get('/getGraph', (req, res) => {
   }
 
   // Calculate start time and end time
+
   const now = new Date();
   const starttime = new Date(); // Create a new Date object to avoid modifying `now`
+  const endtime = new Date();
+
   starttime.setHours(starttime.getHours() - parseInt(duration, 10));
-  const endtime = now.toISOString();
+  endtime.setHours(starttime.getHours() + parseInt(9));
+  const endtimeFormatted = endtime.toISOString();
   const starttimeFormatted = starttime.toISOString();
+
+  console.log("Start Time (Local):", starttimeFormatted);
+  console.log("End Time (Local):", endtimeFormatted);
 
   // SQL query with parameterized inputs
   const query = `

@@ -137,7 +137,7 @@ function loadGraphData(robotId, sensorId, type) {
             const ctx = canvas.getContext('2d');
             const labels =  data.map(entry => {
                 const adjustedDate = new Date(entry.timestamp);
-                adjustedDate.setHours(adjustedDate.getHours() + 9);
+                adjustedDate.setHours(adjustedDate.getHours());
                 return adjustedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             });
 
@@ -238,8 +238,8 @@ function timeSlider(robotId, sensorId) {
         <div class="slidecontainer">
             <input 
                 type="range" 
-                min="1" 
-                max="100" 
+                min="24" 
+                max="2400" 
                 value="${savedValue}" 
                 class="slider" 
                 oninput="updateSliderValue('${robotId}', '${sensorId}', this.value)"
