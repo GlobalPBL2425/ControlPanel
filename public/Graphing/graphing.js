@@ -7,8 +7,9 @@ async function loadRobotIds(initflag) {
         const robotIds = await response.json();
 
         const compostTable = document.getElementById("compostTable");
-        compostTable.innerHTML = ""; // Clear existing rows
-
+        if (initflag) {
+            compostTable.innerHTML = ""; // Clear existing rows
+        }
         robotIds.sort((a, b) => {
             if (a.robotId === "Rpi__1") return -1;
             if (b.robotId === "Rpi__1") return 1;
@@ -70,7 +71,7 @@ setInterval(async function () {
 
 
 async function updateReadings(initflag) {
-    
+    loadRobotIds(initflag)
     console.log("Readings updated with initflag:", initflag);
 }
 
