@@ -7,13 +7,26 @@
     <title>Dynamic Chart.js Plot</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gauge.js/1.3.7/gauge.min.js"></script>
-    <script src="graphing.js" defer></script> <!-- Link to the external script -->
+    <script src="Combined.js" defer></script> <!-- Link to the external script -->
 </head>
 <body>
 
-    <canvas id="TempChart" width="400" height="200"></canvas>
-    <canvas id="TempChart" width="400" height="200"></canvas>
-    <canvas id="gauge" width="300" height="300"></canvas>
+    <table id="sensorTable">
+        <thead>
+            <tr>
+                <th>RobotId</th>
+                
+                <th>Graphs</th>
+                <th>Gauge</th>
+            </tr>
+        </thead>
+        <tbody id="dynamicTable"></tbody>
+    </table>
+
+    
+    
     
 </body>
 </html>
+
+

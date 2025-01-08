@@ -1,13 +1,15 @@
 
 
-async function loadRobotIds() {
+async function loadRobotIds(initflag) {
     try {
         const response = await fetch("http://localhost:3000/getRobotId");
         if (!response.ok) throw new Error(`Failed to fetch robot IDs: ${response.status}`);
         const robotIds = await response.json();
 
         const dynamicTable = document.getElementById("dynamicTable");
-      
+        if (initflag) {
+            dynamicTable.innerHTML = ""; // Clear existing rows
+        }
 
         robotIds.sort((a, b) => {
             if (a.robotId === "Rpi__1") return -1;
@@ -16,57 +18,71 @@ async function loadRobotIds() {
         });
 
         for (const item of robotIds) {
-            await fetchSensorID(item.robotId, dynamicTable);
+            if (initflag) {
+                createGraphRow(item.robotId , dynamicTable);
+            }
+
+            
         }
     } catch (error) {
         console.error("Error loading robot IDs:", error);
     }
 }
 
-async function fetchSensorID(robotId, compostTable) {
+async function fetchSensorID(robotId, dynamicTable) {
     try {
         const response = await fetch(`http://localhost:3000/getSensorId?robotId=${robotId}`);
         if (!response.ok) throw new Error(`Failed to fetch sensor IDs for ${robotId}: ${response.status}`);
         const sensorIds = await response.json();
 
-        sensorIds.forEach(sensor => {
+        // sensorIds.forEach(sensor => {
            
 
             
-        });
+        // });
     } catch (error) {
         console.error(`Error fetching sensor IDs for robotId ${robotId}:`, error);
+        return null;
     }
 }
 
 window.onload = async function () {
     try {
         const initflag = true;
-        await loadRobotIds();
+        await loadRobotIds(initflag);
         // const myLineChart = createChart('myChart', 'line', ['Jan', 'Feb', 'Mar'], [10, 20, 15]);
     } catch (error) {
         console.error("Error during initialization:", error);
     }
 };
 
+function createGraphRow(robotId , dynamicTable) {
+    const row = document.createElement("tr");
+    const row2 = document.createElement("tr");
+    row.innerHTML = `
+        <td rowspan="2">${robotId}</td>
+        <td id="temperature-${robotId}">--</td>
+        <td rowspan="2">--</td>
+    `;
+    dynamicTable.appendChild(row);
+    row2.innerHTML = `
+        <td id="humidity-${robotId}">--</td>
+    `;
+    dynamicTable.appendChild(row2);
+}
+
+function initgraph(){
+
+}
 setInterval(async function () {
     try {
         const initflag = false;
-        await updateReadings(initflag);
+        
     } catch (error) {
         console.error("Error updating readings:", error);
     }
 }, 1000);
 
 function loadGrouping(robotId ,sensorId){
-    timeSlider(robotId, sensorId);
-    loadGraphData(robotId ,sensorId,'temperature')
-    loadGraphData(robotId ,sensorId,'humidity')
-};
-
-function initTempGraph(robotId, sensorArray, dataArray){
 
 };
-
-
-function r

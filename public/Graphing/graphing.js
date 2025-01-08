@@ -122,7 +122,6 @@ function InitGraphData(robotId, sensorId, type) {
 
 
 function loadGraphData(robotId, sensorId, type) {
-
     const storageKey = `sliderValue-${robotId}-${sensorId}`;
     const savedValue = localStorage.getItem(storageKey) || 50;
 
@@ -136,94 +135,106 @@ function loadGraphData(robotId, sensorId, type) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
             const ctx = canvas.getContext('2d');
-            const labels =  data.map(entry => {
+            const labels = data.map(entry => {
                 const adjustedDate = new Date(entry.timestamp);
                 adjustedDate.setHours(adjustedDate.getHours());
                 return adjustedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             });
 
-            if (type == 'temperature'){
+            let chart;
+            if (type === 'temperature') {
                 const graphvalue = data.map(entry => entry.temperature);
-                tempGraph(graphvalue , labels ,ctx);
-            }else{
+                if (!canvas.chart) {
+                    chart = tempGraph(graphvalue, labels, ctx);
+                    canvas.chart = chart;
+                } else {
+                    updateChart(canvas.chart, labels, graphvalue);
+                }
+            } else {
                 const graphvalue = data.map(entry => entry.humidity);
-                humdGraph(graphvalue, labels , ctx);
+                if (!canvas.chart) {
+                    chart = humdGraph(graphvalue, labels, ctx);
+                    canvas.chart = chart;
+                    updateChart(canvas.chart, labels, graphvalue);
+                }
             }
-           
-            
         }
     };
     xhr.send();
+}
 
-};
+function updateChart(chart, newLabels, newData) {
+    chart.data.labels = newLabels;
+    chart.data.datasets[0].data = newData;
+    chart.update();
+}
 
-function tempGraph(temperatures, labels , ctx){
-    new Chart(ctx, {
+function tempGraph(temperatures, labels, ctx) {
+    return new Chart(ctx, {
         type: 'line',
         data: {
-          labels: labels,
-          datasets: [{
-            label: 'Temperature (°C)',
-            data: temperatures,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderWidth: 2,
-            tension: 0.3
-          }]
+            labels: labels,
+            datasets: [{
+                label: 'Temperature (°C)',
+                data: temperatures,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                tension: 0.3
+            }]
         },
         options: {
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Time'
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: 'Temperature (°C)'
-              }
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Temperature (°C)'
+                    }
+                }
             }
-          }
         }
-      });
+    });
+}
 
-};
-
-function humdGraph(humidities, labels , ctx){
-    new Chart(ctx, {
+function humdGraph(humidities, labels, ctx) {
+    return new Chart(ctx, {
         type: 'line',
         data: {
-          labels: labels,
-          datasets: [{
-            label: 'Humidity (%)',
-            data: humidities,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderWidth: 2,
-            tension: 0.3
-          }]
+            labels: labels,
+            datasets: [{
+                label: 'Humidity (%)',
+                data: humidities,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                tension: 0.3
+            }]
         },
         options: {
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Time'
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: 'Humidity (%)'
-              }
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Humidity (%)'
+                    }
+                }
             }
-          }
         }
-      });
+    });
+}
 
-};
 
 
 
