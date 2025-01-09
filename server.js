@@ -404,8 +404,8 @@ app.get('/getGraph', (req, res) => {
   const endtimeFormatted = endtime.toISOString();
   const starttimeFormatted = starttime.toISOString();
 
-  console.log("Start Time (Local):", starttimeFormatted);
-  console.log("End Time (Local):", endtimeFormatted);
+  //console.log("Start Time (Local):", starttimeFormatted);
+  //console.log("End Time (Local):", endtimeFormatted);
 
   // SQL query with parameterized inputs
   const query = `
@@ -437,27 +437,19 @@ app.listen(port, () => {
 
 
 // Endpoint to fetch graph data for a specific robot and sensor within a given time duration
-//http://localhost:3000/getGraph?robotID=Rpi__1&sensorId=sensor__1&type=temperature&duration=5
+//http://localhost:3000/getGraph?robotID=Rpi__1&sensorId=sensor__1&&duration=5
 app.get('/getFROMTO', (req, res) => {
-  const { robotID, sensorId, type, starttime , endtime } = req.query;
+  const { robotID, sensorId, starttime , endtime } = req.query;
 
-  // Validate inputs
-  const allowedTypes = ['temperature', 'humidity'];
-  if (!allowedTypes.includes(type)) {
-      return res.status(400).json({ error: 'Invalid type parameter' });
-  }
-  if (!robotID || !sensorId ) {
-      return res.status(400).json({ error: 'Missing required parameters' });
-  }
 
   // Calculate start time and end time
 
-  console.log("Start Time (Local):", starttime);
-  console.log("End Time (Local):", endtime);
+  //console.log("Start Time (Local):", starttime);
+  //console.log("End Time (Local):", endtime);
 
   // SQL query with parameterized inputs
   const query = `
-    SELECT timestamp, ${type} 
+    SELECT timestamp, temperature , humidity
     FROM sensorreading
     WHERE robotId = ? 
       AND sensorId = ? 

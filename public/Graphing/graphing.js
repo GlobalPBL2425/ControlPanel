@@ -135,6 +135,7 @@ function loadGraphData(robotId, sensorId, type) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
             const ctx = canvas.getContext('2d');
+            console.log(data)
             const labels = data.map(entry => {
                 const adjustedDate = new Date(entry.timestamp);
                 adjustedDate.setHours(adjustedDate.getHours());
