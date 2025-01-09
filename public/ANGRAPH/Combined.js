@@ -125,31 +125,7 @@ function loadGraphData(robotId, sensorId) {
     });
 }
 
-function createChart(ctx, type, labels = [], datasets = []) {
-    return new Chart(ctx, {
-        type: type,
-        data: {
-            labels: labels,
-            datasets: datasets
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Time'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: type === 'temperature' ? 'Temperature (°C)' : 'Humidity (%)'
-                    }
-                }
-            }
-        }
-    });
-}function displayGraphData(robotId, type, data) {
+function displayGraphData(robotId, type, data) {
     const elementId = `${type}-${robotId}`;
     const canvasId = `chart-${elementId}`;
     const canvas = document.getElementById(canvasId);
@@ -160,22 +136,36 @@ function createChart(ctx, type, labels = [], datasets = []) {
     // Prepare datasets for each sensor
     const datasets = [];
     const firstSensor = Object.values(data)[0];
-    const labels = firstSensor.readingData.map(entry => {
-        const adjustedDate = new Date(entry.timestamp);
-        adjustedDate.setHours(adjustedDate.getHours());
-        return adjustedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    });
+
+    let currentDate = null;
+    let hourlyLabels = [];
+    let dataLabels = [];
+    const labels = firstSensor.readingData.map(entry => entry.timestamp);
+    // Prepare the hourly labels for the x-axis
+    // firstSensor.readingData.forEach(entry => {
+    //     const adjustedDate = new Date(entry.timestamp);
+    //     adjustedDate.setHours(adjustedDate.getHours());
+
+    //     const dateStr = adjustedDate.toLocaleDateString('en-GB'); // Date in DD/MM/YYYY format
+    //     const timeStr = adjustedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); // Time in HH:mm format
+
+    //     // Add the date only if it's different from the previous date
+    //     if (currentDate !== dateStr) {
+    //         hourlyLabels.push(dateStr); // Push the date
+    //         currentDate = dateStr; // Update currentDate
+    //     }
+    //     hourlyLabels.push(timeStr); // Always push the time
+    // });
 
     // Loop through the data to prepare the datasets for each sensor
     for (const sensorId in data) {
         const sensorData = data[sensorId];
         const formattedData = sensorData.readingData.map(entry => entry[type]);
 
-        // Reuse the color for the sensor if it has been assigned already
         const label = {
             label: `${sensorId} (${type})`,
             data: formattedData,
-            borderColor: sensorColors[sensorId] || getRandomColor(),  // Use the stored color
+            borderColor:sensorColors[sensorId] || getRandomColor(),
             fill: false,
             yAxisID: type === 'temperature' ? 'y-axis-temp' : 'y-axis-humidity',
         };
@@ -192,6 +182,60 @@ function createChart(ctx, type, labels = [], datasets = []) {
         updateChart(canvas.chart, labels, datasets);
     }
 }
+
+function createChart(ctx, type, labels = [], datasets = []) {
+    let lastDateDisplayed = null; // Track the last displayed date
+
+    return new Chart(ctx, {
+        type: type,
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    title: {
+                        display: true,
+                        text: 'Date & Time'
+                    },
+                    time: {
+                        unit: 'minute',  // Adjust as needed
+                        tooltipFormat: 'dd/MM/yyyy HH:mm',  // Format for tooltips
+                        displayFormats: {
+                            minute: 'dd/MM/yyyy  HH:mm'  // Format for x-axis labels (only show time)
+                        }
+                    },
+                    ticks: {
+                        
+                        maxTicksLimit: 24000000,
+                        autoSkip: false  // Adjust this to control tick skipping
+                    },
+                    grid: {
+                        drawOnChartArea: true,
+                        drawTicks: true,
+                        tickMarkLength: 5,
+                        borderColor: '#ccc',
+                        borderWidth: 1,
+                        color: (context) => {
+                            let index = context.tickIndex;
+                            return index % 1 === 0 ? '#ddd' : 'rgba(0,0,0,0)';  // Adjust grid line appearance
+                        }
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: type === 'temperature' ? 'Temperature (°C)' : 'Humidity (%)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+
 
 
 function updateChart(chart, newLabels, newDatasets) {
@@ -220,7 +264,6 @@ function getRandomColor() {
     }
     return color;
 }
-
 
 function InitGraphData(robotId, type) {
     // Construct the element ID
