@@ -24,6 +24,7 @@ async function loadRobotIds(initflag) {
                 createGraphRow(item.robotId, dynamicTable);
                 InitGraphData(item.robotId, 'temperature');
                 InitGraphData(item.robotId, 'humidity');
+                initTimecontrol(item.robotId);
             }
             const sensorData  =await fetchSensorID(item.robotId);
             //console.log(sensorData)
@@ -77,16 +78,21 @@ window.onload = async function () {
 function createGraphRow(robotId, dynamicTable) {
     const row = document.createElement("tr");
     const row2 = document.createElement("tr");
+    const row3 = document.createElement("tr");
     row.innerHTML = `
-        <td rowspan="2">${robotId}</td>
+        <td rowspan="3">${robotId}</td>
         <td id="temperature-${robotId}">--</td>
-        <td rowspan="2">--</td>
+       
     `;
     dynamicTable.appendChild(row);
     row2.innerHTML = `
         <td id="humidity-${robotId}">--</td>
     `;
     dynamicTable.appendChild(row2);
+    row3.innerHTML = `
+        <td id="gauge-${robotId}">--</td>
+    `;
+    dynamicTable.appendChild(row3);
 }
 
 setInterval(async function () {
@@ -283,4 +289,39 @@ function InitGraphData(robotId, type) {
         </div>
     `;
     
+}
+
+function initTimecontrol(robotId){
+    const elementId = `gauge-${robotId}`;
+    const targetElement = document.getElementById(elementId);
+    
+    // Check if the target element exists
+    if (!targetElement) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
+
+    // Dynamically update the element with graph data
+    targetElement.innerHTML = `
+        <div class="filter-box">
+        <h3>Filter by Date and Time</h3>
+        <form id="filterForm">
+            <label for="startDate">Start Date and Time:</label>
+            <input type="text" id="startDate" name="startDate" required>
+
+            <label for="endDate">End Date and Time:</label>
+            <input type="text" id="endDate" name="endDate" required>
+            
+            <label for="currentTime">Current Time:</label>
+            <input type="checkbox" id="currentTime" name="currentTime">
+
+            <button type="submit">Apply Filter</button>
+        </form>
+    </div>
+    `;
+}
+function updateValue(robotId, time, value) {
+    const storageKey = `time-${robotId}-${time}`;
+    localStorage.setItem(storageKey, value);
+    console.log(`Saved ${value} for ${storageKey}`);
 }
