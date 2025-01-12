@@ -1,11 +1,30 @@
-// Store sensor colors
 const sensorColors = {};
+
+// Fake data to simulate API responses
+const fakeRobotIds = [
+    { robotId: "Rpi__1" },
+    { robotId: "Rpi__2" },
+    { robotId: "Rpi__3" }
+];
+
+const fakeSensorData = {
+    Rpi__1: [
+        { sensorId: "temp1", type: "temperature", readingData: generateFakeSensorData("temperature") },
+        { sensorId: "hum1", type: "humidity", readingData: generateFakeSensorData("humidity") }
+    ],
+    Rpi__2: [
+        { sensorId: "temp2", type: "temperature", readingData: generateFakeSensorData("temperature") },
+        { sensorId: "hum2", type: "humidity", readingData: generateFakeSensorData("humidity") }
+    ],
+    Rpi__3: [
+        { sensorId: "temp3", type: "temperature", readingData: generateFakeSensorData("temperature") },
+        { sensorId: "hum3", type: "humidity", readingData: generateFakeSensorData("humidity") }
+    ]
+};
 
 async function loadRobotIds(initflag) {
     try {
-        const response = await fetch("http://localhost:3000/getRobotId");
-        if (!response.ok) throw new Error(`Failed to fetch robot IDs: ${response.status}`);
-        const robotIds = await response.json();
+        const robotIds = fakeRobotIds; // Using fake robot IDs
 
         const dynamicTable = document.getElementById("dynamicTable");
         if (initflag) {
@@ -39,27 +58,39 @@ async function loadRobotIds(initflag) {
 
 async function fetchSensorID(robotId) {
     try {
-        const response = await fetch(`http://localhost:3000/getSensorId?robotId=${robotId}`);
-        if (!response.ok) throw new Error(`Failed to fetch sensor IDs for ${robotId}: ${response.status}`);
+        // Using fake sensor data
+        const sensorData = fakeSensorData[robotId];
 
-        const sensorIds = await response.json();
-        const sensorData = {};
-
-        for (const sensor of sensorIds) {
-            const readingData = await loadGraphData(robotId, sensor.sensorId);
-            sensorData[sensor.sensorId] = { readingData };
-
-            // Assign a random color to the sensor if it doesn't already have one
+        // Assign a random color to the sensor if it doesn't already have one
+        for (const sensor of sensorData) {
             if (!sensorColors[sensor.sensorId]) {
                 sensorColors[sensor.sensorId] = getRandomColor();
             }
         }
 
-        return sensorData;
+        const sensorDataObject = {};
+        sensorData.forEach(sensor => {
+            sensorDataObject[sensor.sensorId] = { readingData: sensor.readingData };
+        });
+
+        return sensorDataObject;
     } catch (error) {
         console.error(`Error fetching sensor IDs for robotId ${robotId}:`, error);
         return null;
     }
+}
+
+// Generate fake data for sensor readings (e.g., temperature or humidity)
+function generateFakeSensorData(type) {
+    const fakeData = [];
+    const currentTime = new Date();
+    for (let i = 0; i < 50; i++) {
+        fakeData.push({
+            timestamp: new Date(currentTime - (i * 60 * 1000)).toISOString(),
+            [type]: (Math.random() * (type === "temperature" ? 30 : 100)).toFixed(2)
+        });
+    }
+    return fakeData;
 }
 
 window.onload = async function () {
@@ -71,6 +102,8 @@ window.onload = async function () {
     }
 };
 
+// Functions for creating and updating charts, rendering filter forms, etc.
+// These remain unchanged
 function createGraphRow(robotId, dynamicTable) {
     const row = document.createElement("tr");
     const row2 = document.createElement("tr");
@@ -89,33 +122,6 @@ function createGraphRow(robotId, dynamicTable) {
     `;
     dynamicTable.appendChild(row3);
 };
-
-function loadGraphData(robotId, sensorId) {
-    const savedStartTime = localStorage.getItem(`time-${robotId}-starttime`) || new Date(0);
-    const savedEndTime = localStorage.getItem(`time-${robotId}-endtime`) || new Date();
-
-    savedStartTime.setHours(savedStartTime.getHours() + 9);
-    savedEndTime.setHours(savedEndTime.getHours() + 9);
-
-    const startFormatted = savedStartTime.toISOString();
-    const endFormatted = savedEndTime.toISOString();
-
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", `http://localhost:3000/getFROMTO?robotID=${robotId}&sensorId=${sensorId}&starttime=${startFormatted}&endtime=${endFormatted}`, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    const data = JSON.parse(xhr.responseText);
-                    resolve(data);
-                } else {
-                    reject(new Error(`Failed to fetch data: ${xhr.status}`));
-                }
-            }
-        };
-        xhr.send();
-    });
-}
 
 function displayGraphData(robotId, type, data) {
     const elementId = `${type}-${robotId}`;
@@ -335,7 +341,7 @@ function handleFormSubmit(e) {
     updateValue(robotId, "endtime", endDate);
 
     if (document.getElementById("currentTime").checked) {
-        setInterval(autoupdater, 20000); // Call autoupdater every 20 seconds
+        setInterval(autoupdater, 100); // Call autoupdater every 20 seconds
     } else {
         autoupdater(); // Call autoupdater once
     }
