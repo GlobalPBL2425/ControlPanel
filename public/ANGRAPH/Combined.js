@@ -19,13 +19,12 @@ async function loadRobotIds(initflag) {
             return 0;
         });
 
-        for (const item of robotIds) {
+  Timecont      for (const item of robotIds) {
             if (initflag) {
                 createGraphRow(item.robotId, dynamicTable);
                 InitGraphData(item.robotId, 'temperature');
                 InitGraphData(item.robotId, 'humidity');
-                initTimecontrol(item.robotId);
-            }
+               
             const sensorData  =await fetchSensorID(item.robotId);
             //console.log(sensorData)
 
@@ -291,7 +290,7 @@ function InitGraphData(robotId, type) {
     
 }
 
-function initTimecontrol(robotId){
+function Timecontrol(robotId){
     const elementId = `gauge-${robotId}`;
     const targetElement = document.getElementById(elementId);
     
