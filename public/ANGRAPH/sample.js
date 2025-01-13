@@ -341,15 +341,15 @@ function handleFormSubmit(e) {
     updateValue(robotId, "endtime", endDate);
 
     if (document.getElementById("currentTime").checked) {
-        setInterval(autoupdater, 100); // Call autoupdater every 20 seconds
+        setInterval(autoupdater, 10000); // Call autoupdater every 20 seconds
     } else {
         autoupdater(); // Call autoupdater once
     }
 
-    console.log("Filter Applied:");
-    console.log("Start Date and Time:", startDate);
-    console.log("End Date and Time:", endDate);
-    console.log("Current Time Selected:", document.getElementById("currentTime").checked);
+    //console.log("Filter Applied:");
+    //console.log("Start Date and Time:", startDate);
+    //console.log("End Date and Time:", endDate);
+    //console.log("Current Time Selected:", document.getElementById("currentTime").checked);
 
     alert(`Filter applied: \nStart Date and Time: ${startDate}\nEnd Date and Time: ${endDate}`);
 }

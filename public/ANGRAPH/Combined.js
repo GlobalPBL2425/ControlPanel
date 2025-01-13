@@ -91,14 +91,22 @@ function createGraphRow(robotId, dynamicTable) {
 };
 
 function loadGraphData(robotId, sensorId) {
-    const savedStartTime = localStorage.getItem(`time-${robotId}-starttime`) || new Date(0);
-    const savedEndTime = localStorage.getItem(`time-${robotId}-endtime`) || new Date();
+    let savedStartTime = localStorage.getItem(`time-${robotId}-starttime`) || new Date(0).toISOString();
+    let savedEndTime = localStorage.getItem(`time-${robotId}-endtime`) || new Date().toISOString();
 
+    // Convert to Date objects
+    savedStartTime = new Date(savedStartTime);
+    savedEndTime = new Date(savedEndTime);
+
+    // Adjust to the desired timezone (e.g., JST - add 9 hours)
     savedStartTime.setHours(savedStartTime.getHours() + 9);
     savedEndTime.setHours(savedEndTime.getHours() + 9);
 
     const startFormatted = savedStartTime.toISOString();
     const endFormatted = savedEndTime.toISOString();
+
+    console.log("Start Date and Time:", startFormatted);
+    console.log("End Date and Time:", endFormatted);
 
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -287,18 +295,18 @@ async function renderFilterForm(robotId) {
 
     flatpickr("#startDate", {
         enableTime: true,
-        dateFormat: "Y-m-d H:i:S",
+        dateFormat: "Z",
         time_24hr: true,
     });
 
     flatpickr("#endDate", {
         enableTime: true,
-        dateFormat: "Y-m-d H:i:S",
+        dateFormat: "Z",
         time_24hr: true,
     });
 
     const form = document.getElementById("filterForm");
-    form.addEventListener("submit", handleFormSubmit);
+    form.addEventListener("submit", (e) => handleFormSubmit(e, robotId));
 }
 
 function updateEndDate() {
@@ -308,7 +316,7 @@ function updateEndDate() {
     if (currentTimeCheckbox && currentTimeCheckbox.checked && endDateInput) {
         const currentTime = new Date().toISOString();
         endDateInput.value = currentTime;
-        console.log("End Date updated to:", currentTime);
+        //console.log("End Date updated to:", currentTime);
     }
 }
 
@@ -323,16 +331,22 @@ function autoupdater() {
 }
 
 // In the handleFormSubmit function, ensure you're calling autoupdater properly:
-function handleFormSubmit(e) {
+function handleFormSubmit(e ,robotId) {
     e.preventDefault();
+ // Example robot ID
+    const startDateInput  = document.getElementById("startDate").value;
+    let endDateInput = document.getElementById("endDate").value;
 
-    const robotId = "robot1"; // Example robot ID
-    const startDate = document.getElementById("startDate").value;
-    let endDate = document.getElementById("endDate").value;
+    // Convert input to UTC (Zulu Time)
+    const startDate = new Date(startDateInput).toISOString();
+    const endDate = new Date(endDateInput).toISOString();
 
     // Save startDate and endDate to localStorage using updateValue function
     updateValue(robotId, "starttime", startDate);
     updateValue(robotId, "endtime", endDate);
+
+    //console.log("Start Date and Time:", startDate);
+    //console.log("End Date and Time:", endDate);
 
     if (document.getElementById("currentTime").checked) {
         setInterval(autoupdater, 20000); // Call autoupdater every 20 seconds
@@ -340,10 +354,9 @@ function handleFormSubmit(e) {
         autoupdater(); // Call autoupdater once
     }
 
-    console.log("Filter Applied:");
-    console.log("Start Date and Time:", startDate);
-    console.log("End Date and Time:", endDate);
-    console.log("Current Time Selected:", document.getElementById("currentTime").checked);
+    //console.log("Filter Applied:");
+    
+    //console.log("Current Time Selected:", document.getElementById("currentTime").checked);
 
-    alert(`Filter applied: \nStart Date and Time: ${startDate}\nEnd Date and Time: ${endDate}`);
+    //alert(`Filter applied: \nStart Date and Time: ${startDate}\nEnd Date and Time: ${endDate}`);
 }
