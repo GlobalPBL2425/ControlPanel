@@ -16,9 +16,10 @@
     <div class="folder">
         <div class="tabs">
             <button class="tab active" onclick="openTab(event, 'Tab1')">Measure</button>
-            <button class="tab" onclick="openTab(event, 'Tab2')">Weather Conditions</button>
-            <button class="tab" onclick="openTab(event, 'Tab3')">Sensor Readings</button>
-            <button class="tab" onclick="openTab(event, 'Tab4')">Conditions</button>
+            <button class="tab" onclick="openTab(event, 'Tab2')">Angraph</button>
+            <button class="tab" onclick="openTab(event, 'Tab3')">General Graph</button>
+            <button class="tab" onclick="openTab(event, 'Tab4')">Sensor Readings</button>
+            <button class="tab" onclick="openTab(event, 'Tab5')">Conditions</button>
         </div>
         <div class="tab-content" id="Tab1">
             <p>Measuring Temperature and Humidity</p>
@@ -45,53 +46,21 @@
     </div>
 
     <div class="tab-content" id="Tab2" style="display:none">
-        <p>Weather Condition</p>
-        <!-- Data will be taken from MySQL/データは MySQL から取得されます-->
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Min Temp</th>
-                <th>Max Temp</th>
-                <th>Min Hum</th>
-                <th>Max Hum</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Cold</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Hot</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Warm</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Dry</td>
-                <td>8.9</td>
-                <td>13.7</td>
-                <td> 76.7</td>
-                <td>86.3</td>
-            </tr>
-        </table>
+        <div>
+            <h3>Combined Graph</h3>
+            <iframe src="public/ANGRAPH/Combined.html" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
+        
     </div>
-
     <div class="tab-content" id="Tab3" style="display:none">
+        <div>
+            <h3>General Graph</h3>
+            <iframe src="public/Graphing/generalgraphs.html" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
+    </div>
+    
+
+    <div class="tab-content" id="Tab4" style="display:none">
         <p>Sensor Readings</p>
 
         <label for="filterRpi">
@@ -119,7 +88,7 @@
             </tr>
         </table>
     </div>
-    <div class="tab-content" id="Tab4" style="display:none">
+    <div class="tab-content" id="Tab5" style="display:none">
         <p>Conditions</p>
         <div class="tabs">
             <button class="tab active" onclick="toggleTab(event, 'Mixer')">Mixer</button>
